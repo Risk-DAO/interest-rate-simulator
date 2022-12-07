@@ -11,15 +11,121 @@ export default function Home() {
   const [borrowFormula, setborrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
+  //// SIMULATION JS
   function supplyDemand(supplyFormula: string, interestRate: number) {
-    if (supplyFormula.includes('interestRate')) {
-      const EvalResults: number = eval(supplyFormula);
-      console.log('evalresults are', EvalResults);
-      return EvalResults;
-    } else {
-      console.log("error doesn't contain interest rate");
+    const supplyEvalResults: number = eval(supplyFormula);
+    return supplyEvalResults;
+  }
+  function borrowDemand(borrowFormula: string, interestRate: number) {
+    const borrowEvalResults: number = eval(borrowFormula);
+    return borrowEvalResults;
+  }
+  function protocolInterestRate(interestFormula: string, supply: number, borrow: number) {
+    const interestEvalResults: number = eval(interestFormula);
+    return interestEvalResults;
+  }
+  function findNewSupply(
+    supply: number,
+    borrow: number,
+    step: number,
+    interestRateFunction: Function,
+    supplyDemandFunction: Function,
+  ) {
+    for (let newSupply = supply; ; newSupply += step) {
+      const utilization = borrow / newSupply;
+      const interstRate = interestRateFunction(newSupply, borrow) * utilization;
+      if (supplyDemandFunction(interstRate) < newSupply) {
+        return newSupply - step;
+      }
     }
   }
+  function findNewBorrow(
+    supply: number,
+    borrow: number,
+    step: number,
+    interestRateFunction: Function,
+    borrowDemandFunction: Function,
+  ) {
+    for (let newBorrow = borrow; ; newBorrow += step) {
+      const interestRate = interestRateFunction(supply, newBorrow);
+      if (borrowDemandFunction(interestRate) < newBorrow) {
+        return newBorrow - step;
+      }
+      if (newBorrow >= supply) {
+        return newBorrow - step;
+      }
+    }
+  }
+  function findInitialBorrow(
+    initialSupply: number,
+    stepSize: number,
+    supplyDemandFunction: Function,
+    borrowDemandFunction: Function,
+  ) {
+    // find supply interest rate
+    let supplyInterestRate = 0;
+    while (supplyDemandFunction(supplyInterestRate) < initialSupply) {
+      supplyInterestRate += stepSize;
+    }
+
+    console.log({ supplyInterestRate });
+    let borrow = 0;
+    while (true) {
+      const borrowRate = (borrow * supplyInterestRate) / initialSupply;
+      const borrowDemand = borrowDemandFunction(borrowRate);
+
+      if (borrowDemand < borrow) break;
+      if (borrowDemand >= initialSupply) return initialSupply;
+
+      console.log({ borrowRate }, { borrow });
+
+      borrow += stepSize;
+    }
+
+    return borrow;
+  }
+  function simulate(
+    initialSupply: number,
+    stepSize: number,
+    minChange: number,
+    interestRateFunction: Function,
+    supplyDemandFunction: Function,
+    borrowDemandFunction: Function,
+  ) {
+    let currentSupply = initialSupply;
+    let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyDemandFunction, borrowDemandFunction);
+
+    console.log('initial borrow', currentBorrow);
+
+    while (true) {
+      const newSupply = findNewSupply(
+        currentSupply,
+        currentBorrow,
+        stepSize,
+        interestRateFunction,
+        supplyDemandFunction,
+      );
+      const newBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFunction, borrowDemandFunction);
+
+      if (newSupply / currentSupply < 1 + minChange) {
+        console.log('simulation is done');
+        break;
+      }
+
+      currentSupply = newSupply;
+      currentBorrow = newBorrow;
+
+      const util = currentBorrow / currentSupply;
+      const supplyApy = interestRateFunction(currentSupply, currentBorrow) * util;
+      const borrowApy = interestRateFunction(currentSupply, currentBorrow);
+
+      console.log({ currentSupply }, { supplyApy }, { currentBorrow }, { borrowApy });
+    }
+  }
+
+  /// END SIMULATION JS
+
+  /// INTERFACE JS
 
   return (
     <div className={styles.container}>
@@ -35,8 +141,8 @@ export default function Home() {
         <p className={styles.description}>Get started by inputing your variables:</p>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
-            Initial Supply (in millions):
+          <div className={styles.inputs}>
+            Initial Supply:
             <br />
             <input
               type="number"
@@ -46,7 +152,7 @@ export default function Home() {
             />
             <br />
             <br />
-            Borrow Function (as javascript):
+            Borrow Function:
             <br />
             <input
               type="text"
@@ -56,7 +162,7 @@ export default function Home() {
             />
             <br />
             <br />
-            Supply Function (as javascript):
+            Supply Function:
             <br />
             <input
               type="text"
@@ -66,11 +172,13 @@ export default function Home() {
             />
             <br />
             <br />
-            <div className={styles.alignCenter}>
-              <button onClick={(e) => supplyDemand(supplyFormula, 10)}>run simulation</button>
+            <div style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <button onClick={(e) => simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand)}>
+                run simulation
+              </button>
             </div>
           </div>
-          <div className={styles.card}>
+          <div className={styles.control}>
             Current inputs are:
             <br />
             <br />

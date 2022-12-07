@@ -72,8 +72,7 @@
   flex-wrap: wrap;
   max-width: 800px;
 }
-
-.card {
+.inputs {
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
@@ -85,19 +84,55 @@
   max-width: 300px;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
+.inputs:hover,
+.inputs:focus,
+.inputs:active {
   color: #0070f3;
   border-color: #0070f3;
 }
 
-.card h2 {
+.inputs h2 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
 }
 
-.card p {
+.inputs p {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.control {
+  margin: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  max-width: 300px;
+}
+.controlWrong{
+  margin: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  max-width: 300px;
+  color: #b03e05;
+  border-color: #b03e05;
+}
+
+.control h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.control p {
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
@@ -116,7 +151,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .card,
+  .control,
   .footer {
     border-color: #222;
   }
