@@ -17,11 +17,7 @@ export default function Home() {
   const [supplyCheck, setSupplyCheck] = useState(true);
 
   //logs variable
-  const [simulationLog, setSimulationLog] = useState([
-    'firstLine is this',
-    'second line is that',
-    'third line is different still',
-  ]);
+  const [simulationLog, setSimulationLog] = useState<string[]>([]);
 
   //// SIMULATION JS
   function supplyDemand(supplyFormula: string, interestRate: number) {
@@ -81,6 +77,7 @@ export default function Home() {
     }
 
     console.log({ supplyInterestRate });
+    setSimulationLog([...simulationLog, `supplyinterestrate is ${supplyInterestRate}`]);
     let borrow = 0;
     while (true) {
       const borrowRate = (borrow * supplyInterestRate) / initialSupply;
@@ -90,6 +87,7 @@ export default function Home() {
       if (borrowDemand >= initialSupply) return initialSupply;
 
       console.log({ borrowRate }, { borrow });
+      setSimulationLog([...simulationLog, `${borrowRate} is ${borrow}`]);
 
       borrow += stepSize;
     }
@@ -104,10 +102,12 @@ export default function Home() {
     supplyDemandFunction: Function,
     borrowDemandFunction: Function,
   ) {
+    setSimulationLog([]);
     let currentSupply = initialSupply;
     let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyDemandFunction, borrowDemandFunction);
 
     console.log('initial borrow', currentBorrow);
+    setSimulationLog([...simulationLog, `initial borrow is ${currentBorrow}`]);
 
     while (true) {
       const newSupply = findNewSupply(
@@ -143,9 +143,8 @@ export default function Home() {
     line: string;
   }
   function LogLine(props: LogLineProps) {
-    console.log(props.line);
     return (
-      <li className={props.id % 2 ? styles.line0 : styles.line1} id={String(props.id)}>
+      <li key={props.id} className={props.id % 2 ? styles.line0 : styles.line1}>
         {props.line}
       </li>
     );
@@ -178,6 +177,7 @@ export default function Home() {
         setSupplyFormula(input);
       }
     }
+    console.log(simulationLog);
   }
 
   return (
