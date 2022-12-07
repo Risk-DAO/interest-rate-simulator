@@ -8,7 +8,7 @@ export default function Home() {
   const minChange: number = 0.001;
   const [interestFormula, setinterestFormula] = useState('70 * borrow / supply');
   const [initialSupply, setInitialSupply] = useState('1');
-  const [borrowFormula, setborrowFormula] = useState('100 - 5 * interestRate');
+  const [borrowFormula, setBorrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
   //control variables
@@ -145,12 +145,19 @@ export default function Home() {
     } else if (field === 'borrowFormula') {
       if (input.includes('interestRate')) {
         setBorrowCheck(true);
-        setborrowFormula(input);
+        setBorrowFormula(input);
       } else {
         setBorrowCheck(false);
-        setborrowFormula(input);
+        setBorrowFormula(input);
       }
     } else if (field === 'supplyFormula') {
+      if (input.includes('interestRate')) {
+        setSupplyCheck(true);
+        setSupplyFormula(input);
+      } else {
+        setSupplyCheck(false);
+        setSupplyFormula(input);
+      }
     }
   }
 
@@ -185,7 +192,7 @@ export default function Home() {
               type="text"
               placeholder="0"
               value={borrowFormula}
-              onChange={(e) => setborrowFormula(e.target.value)}
+              onChange={(e) => inputValidation('borrowFormula', e.target.value)}
             />
             <br />
             <br />
@@ -195,25 +202,28 @@ export default function Home() {
               type="text"
               placeholder="0"
               value={supplyFormula}
-              onChange={(e) => setSupplyFormula(e.target.value)}
+              onChange={(e) => inputValidation('supplyFormula', e.target.value)}
             />
             <br />
             <br />
             <div style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <button onClick={(e) => simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand)}>
+              <button
+                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
+                onClick={(e) => simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand)}
+              >
                 run simulation
               </button>
             </div>
           </div>
           <div className={styles.control}>
-            Current inputs are:
+            Inputs Check
             <br />
             <br />
-            initial supply: {initialSupply}
+            initial supply: {initialSupplyCheck ? '✅' : '❌'}
             <br />
-            Borrow function: {borrowFormula}
+            Borrow function: {borrowCheck ? '✅' : '❌'}
             <br />
-            Supply function: {supplyFormula}
+            Supply function: {supplyCheck ? '✅' : '❌'}
           </div>
         </div>
         {/* FAKE TERMINAL FOR SIMULATION OUTPUT */}
