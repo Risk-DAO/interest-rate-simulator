@@ -16,6 +16,13 @@ export default function Home() {
   const [borrowCheck, setBorrowCheck] = useState(true);
   const [supplyCheck, setSupplyCheck] = useState(true);
 
+  //logs variable
+  const [simulationLog, setSimulationLog] = useState([
+    'firstLine is this',
+    'second line is that',
+    'third line is different still',
+  ]);
+
   //// SIMULATION JS
   function supplyDemand(supplyFormula: string, interestRate: number) {
     const supplyEvalResults: number = eval(supplyFormula);
@@ -131,6 +138,18 @@ export default function Home() {
   /// END SIMULATION JS
 
   /// INTERFACE JS
+  interface LogLineProps {
+    id: number;
+    line: string;
+  }
+  function LogLine(props: LogLineProps) {
+    console.log(props.line);
+    return (
+      <li className={props.id % 2 ? styles.line0 : styles.line1} id={String(props.id)}>
+        {props.line}
+      </li>
+    );
+  }
 
   // IMPLEMENT INPUT VALIDATION HERE
   function inputValidation(field: string, input: string) {
@@ -233,7 +252,13 @@ export default function Home() {
           <div className={styles.fakeButtons + ' ' + styles.fakeZoom}></div>
         </div>
 
-        <div className={styles.fakeScreen}>{/* SIMULATION OUTPUT HERE */}</div>
+        <div className={styles.fakeScreen}>
+          <ol>
+            {simulationLog.map((line, i) => {
+              return <LogLine id={i} line={line} />;
+            })}
+          </ol>
+        </div>
       </main>
       <footer className={styles.footer}>Powered by la Tribu</footer>
     </div>

@@ -226,7 +226,7 @@
   font-weight: bold;
 }
 
-.line1 {
+.line0 {
   color: #9CD9F0;
   -webkit-animation: type .5s 1s steps(20, end) forwards;
   -moz-animation: type .5s 1s steps(20, end) forwards;
@@ -234,14 +234,14 @@
   animation: type .5s 1s steps(20, end) forwards;
 }
 
-.cursor1 {
+.cursor0 {
   -webkit-animation: blink 1s 2s 2 forwards;
   -moz-animation: blink 1s 2s 2 forwards;
   -o-animation: blink 1s 2s 2 forwards;
   animation: blink 1s 2s 2 forwards;
 }
 
-.line2 {
+.line1 {
   color: #CDEE69;
   -webkit-animation: type .5s 4.25s steps(20, end) forwards;
   -moz-animation: type .5s 4.25s steps(20, end) forwards;
@@ -249,7 +249,7 @@
   animation: type .5s 4.25s steps(20, end) forwards;
 }
 
-.cursor2 {
+.cursor1 {
   -webkit-animation: blink 1s 5.25s 2 forwards;
   -moz-animation: blink 1s 5.25s 2 forwards;
   -o-animation: blink 1s 5.25s 2 forwards;
