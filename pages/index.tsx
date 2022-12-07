@@ -11,6 +11,11 @@ export default function Home() {
   const [borrowFormula, setborrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
+  //control variables
+  const [initialSupplyCheck, setInitialSupplyCheck] = useState(true);
+  const [borrowCheck, setBorrowCheck] = useState(true);
+  const [supplyCheck, setSupplyCheck] = useState(true);
+
   //// SIMULATION JS
   function supplyDemand(supplyFormula: string, interestRate: number) {
     const supplyEvalResults: number = eval(supplyFormula);
@@ -128,6 +133,26 @@ export default function Home() {
   /// INTERFACE JS
 
   // IMPLEMENT INPUT VALIDATION HERE
+  function inputValidation(field: string, input: string) {
+    if (field === 'initialSupply') {
+      let inputValue: number = Number(input);
+      if (inputValue > 0) {
+        setInitialSupplyCheck(true);
+        setInitialSupply(input);
+      } else {
+        setInitialSupplyCheck(false);
+      }
+    } else if (field === 'borrowFormula') {
+      if (input.includes('interestRate')) {
+        setBorrowCheck(true);
+        setborrowFormula(input);
+      } else {
+        setBorrowCheck(false);
+        setborrowFormula(input);
+      }
+    } else if (field === 'supplyFormula') {
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -150,7 +175,7 @@ export default function Home() {
               type="number"
               value={initialSupply}
               placeholder="0"
-              onChange={(e) => setInitialSupply(e.target.value)}
+              onChange={(e) => inputValidation('initialSupply', e.target.value)}
             />
             <br />
             <br />
