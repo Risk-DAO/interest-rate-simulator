@@ -127,6 +127,8 @@ export default function Home() {
 
   /// INTERFACE JS
 
+  // IMPLEMENT INPUT VALIDATION HERE
+
   return (
     <div className={styles.container}>
       <Head>
