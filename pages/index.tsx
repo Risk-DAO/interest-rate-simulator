@@ -6,9 +6,9 @@ export default function Home() {
   // Simulation parameters initialization
   const stepSize: number = 0.0001;
   const minChange: number = 0.001;
-  const [protocolInterestFunc, setProtocolInterestFunc] = useState('70 * borrow / supply');
+  const [interestFormula, setinterestFormula] = useState('70 * borrow / supply');
   const [initialSupply, setInitialSupply] = useState('1');
-  const [borrowFunc, setBorrowFunc] = useState('100 - 5 * interestRate');
+  const [borrowFormula, setborrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
   function supplyDemand(supplyFormula: string, interestRate: number) {
@@ -19,10 +19,6 @@ export default function Home() {
     } else {
       console.log("error doesn't contain interest rate");
     }
-  }
-
-  function borrowDemand(borrow: string, interestRate: number) {
-    return 'lolilol';
   }
 
   return (
@@ -52,7 +48,12 @@ export default function Home() {
             <br />
             Borrow Function (as javascript):
             <br />
-            <input type="text" placeholder="0" value={borrowFunc} onChange={(e) => setBorrowFunc(e.target.value)} />
+            <input
+              type="text"
+              placeholder="0"
+              value={borrowFormula}
+              onChange={(e) => setborrowFormula(e.target.value)}
+            />
             <br />
             <br />
             Supply Function (as javascript):
@@ -75,7 +76,7 @@ export default function Home() {
             <br />
             initial supply: {initialSupply}
             <br />
-            Borrow function: {borrowFunc}
+            Borrow function: {borrowFormula}
             <br />
             Supply function: {supplyFormula}
           </div>
