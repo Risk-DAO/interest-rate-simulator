@@ -1,15 +1,17 @@
-const borrowDemand = function(borrowFormula:string, interestRate:number) {
-    console.log({borrowFormula}, {interestRate})
+import os from "os"
+
+console.log(os.hostname)
+function borrowDemand(borrowFormula:string, interestRate:number) {
+    // console.log({borrowFormula}, {interestRate})  
     return eval(borrowFormula)
 }
-
-const supplyDemand = function(supplyFormula:string, interestRate:number) {
-    console.log({supplyFormula}, {interestRate})
+function supplyDemand(supplyFormula:string, interestRate:number) {
+    // console.log({supplyFormula}, {interestRate})
     return eval(supplyFormula)
 }
 
-const protocolInterestRate = function(interestRateFormula:string, supply:number, borrow:number) {
-    console.log({interestRateFormula}, {supply}, {borrow})
+function protocolInterestRate(interestRateFormula:string, supply:number, borrow:number) {
+    // console.log({interestRateFormula}, {supply}, {borrow})
     return eval(interestRateFormula)
 }
 
@@ -62,7 +64,7 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
     return borrow
 }
 
-function simulate(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) {
+export function simulate(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) {
     let currentSupply = initialSupply
     let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyFormula, borrowFormula)
 
@@ -85,6 +87,4 @@ function simulate(initialSupply:number, stepSize:number, minChange:number, inter
     }
 }
 
-module.exports = {}
-
-simulate(1, 0.001, 0.0001, '70 * borrow / supply', '6 * interestRate', '100 - 5 * interestRate')
+// simulate(1, 0.001, 0.0001, '70 * borrow / supply', '6 * interestRate', '100 - 5 * interestRate')

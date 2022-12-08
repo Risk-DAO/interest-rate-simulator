@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { simulate } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
@@ -7,7 +8,7 @@ export default function Home() {
   const stepSize: number = 0.0001;
   const minChange: number = 0.001;
   const [interestFormula, setinterestFormula] = useState('70 * borrow / supply');
-  const [initialSupply, setInitialSupply] = useState('1');
+  const [initialSupply, setInitialSupply] = useState(1);
   const [borrowFormula, setBorrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
@@ -18,128 +19,6 @@ export default function Home() {
 
   //logs variable
   const [simulationLog, setSimulationLog] = useState<string[]>([]);
-
-  //// SIMULATION JS
-  function supplyDemand(interestRate: number) {
-    console.log(`computing supply demand`);
-    const supplyEvalResults: number = eval(supplyFormula);
-    return supplyEvalResults;
-  }
-
-  function borrowDemand(interestRate: number) {
-    console.log(`computing borrow demand`);
-    const borrowEvalResults: number = eval(borrowFormula);
-    return borrowEvalResults;
-  }
-  function protocolInterestRate(supply: number, borrow: number) {
-    const interestEvalResults: number = eval(interestFormula);
-    return interestEvalResults;
-  }
-  function findNewSupply(
-    supply: number,
-    borrow: number,
-    step: number,
-    interestRateFunction: Function,
-    supplyDemandFunction: Function,
-  ) {
-    console.log(`finding new supply`);
-    for (let newSupply = supply; ; newSupply += step) {
-      const utilization = borrow / newSupply;
-      const interstRate = interestRateFunction(newSupply, borrow) * utilization;
-      if (supplyDemandFunction(interstRate) < newSupply) {
-        return newSupply - step;
-      }
-    }
-  }
-  function findNewBorrow(
-    supply: number,
-    borrow: number,
-    step: number,
-    interestRateFunction: Function,
-    borrowDemandFunction: Function,
-  ) {
-    console.log(`find new borrow`);
-    for (let newBorrow = borrow; ; newBorrow += step) {
-      const interestRate = interestRateFunction(supply, newBorrow);
-      if (borrowDemandFunction(interestRate) < newBorrow) {
-        return newBorrow - step;
-      }
-      if (newBorrow >= supply) {
-        return newBorrow - step;
-      }
-    }
-  }
-  function findInitialBorrow(
-    initialSupply: number,
-    stepSize: number,
-    supplyDemandFunction: Function,
-    borrowDemandFunction: Function,
-  ) {
-    // find supply interest rate
-    let supplyInterestRate = 0;
-    while (supplyDemandFunction(supplyInterestRate) < initialSupply) {
-      supplyInterestRate += stepSize;
-    }
-
-    console.log({ supplyInterestRate });
-    let borrow = 0;
-    while (true) {
-      const borrowRate = (borrow * supplyInterestRate) / initialSupply;
-      const borrowDemand = borrowDemandFunction(borrowRate);
-
-      if (borrowDemand < borrow) break;
-      if (borrowDemand >= initialSupply) return initialSupply;
-
-      console.log({ borrowRate }, { borrow });
-      setSimulationLog([...simulationLog, `${borrowRate} is ${borrow}`]);
-
-      borrow += stepSize;
-    }
-
-    return borrow;
-  }
-  function simulate(
-    initialSupply: number,
-    stepSize: number,
-    minChange: number,
-    interestRateFunction: Function,
-    supplyDemandFunction: Function,
-    borrowDemandFunction: Function,
-  ) {
-    setSimulationLog([]);
-    let currentSupply = initialSupply;
-    let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyDemandFunction, borrowDemandFunction);
-
-    console.log('initial borrow', currentBorrow);
-    updateLogs(`initial borrow is ${currentBorrow}`);
-
-    while (true) {
-      const newSupply = findNewSupply(
-        currentSupply,
-        currentBorrow,
-        stepSize,
-        interestRateFunction,
-        supplyDemandFunction,
-      );
-      const newBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFunction, borrowDemandFunction);
-
-      if (newSupply / currentSupply < 1 + minChange) {
-        console.log('simulation is done');
-        break;
-      }
-
-      currentSupply = newSupply;
-      currentBorrow = newBorrow;
-
-      const util = currentBorrow / currentSupply;
-      const supplyApy = interestRateFunction(currentSupply, currentBorrow) * util;
-      const borrowApy = interestRateFunction(currentSupply, currentBorrow);
-
-      console.log({ currentSupply }, { supplyApy }, { currentBorrow }, { borrowApy });
-    }
-  }
-
-  /// END SIMULATION JS
 
   /// INTERFACE JS
   interface LogLineProps {
@@ -163,7 +42,7 @@ export default function Home() {
       let inputValue: number = Number(input);
       if (inputValue > 0) {
         setInitialSupplyCheck(true);
-        setInitialSupply(input);
+        setInitialSupply(inputValue);
       } else {
         setInitialSupplyCheck(false);
       }
@@ -235,7 +114,7 @@ export default function Home() {
             <div style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <button
                 disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
-                onClick={(e) => simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand)}
+                onClick={(e) => simulate(initialSupply, 0.001, 0.0001, interestFormula, supplyFormula, borrowFormula)}
               >
                 run simulation
               </button>
