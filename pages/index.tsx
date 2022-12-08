@@ -1,4 +1,9 @@
+import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+
 import Head from 'next/head';
+import Image from 'next/image'
+import { SimulatedResults } from '../components/simulation';
+import blackLogo from '../public/black-logo.png'
 import { simulate } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
@@ -12,32 +17,21 @@ export default function Home() {
   const [borrowFormula, setBorrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
+  //Simulation results
+  const [plotData, setPlotData] = useState<SimulatedResults[]>([])
+
   //control variables
   const [initialSupplyCheck, setInitialSupplyCheck] = useState(true);
   const [borrowCheck, setBorrowCheck] = useState(true);
   const [supplyCheck, setSupplyCheck] = useState(true);
 
   //logs variable
-  const [simulationLog, setSimulationLog] = useState<string[]>([]);
 
   /// INTERFACE JS
-  interface LogLineProps {
-    id: number;
-    line: string;
-  }
-  function LogLine(props: LogLineProps) {
-    return (
-      <li key={props.id} className={styles.code}>
-        {props.line}
-      </li>
-    );
-  }
-  function updateLogs(log: string) {
-    setSimulationLog([...simulationLog, log]);
-  }
 
   // IMPLEMENT INPUT VALIDATION HERE
   function inputValidation(field: string, input: string) {
+    console.log({ plotData })
     if (field === 'initialSupply') {
       let inputValue: number = Number(input);
       if (inputValue > 0) {
@@ -64,13 +58,11 @@ export default function Home() {
       }
     }
   }
-  function runSimulation(){
+  function runSimulation() {
     const results = simulate(initialSupply, 0.001, 0.0001, interestFormula, supplyFormula, borrowFormula)
-    console.log({results})
+    setPlotData(results)
+    console.log({ plotData })
   }
-
-
-
 
   return (
     <div className={styles.container}>
@@ -79,12 +71,13 @@ export default function Home() {
         <meta name="description" content="Risk's DAO DEFI interest rate simulator" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
+        <div className={styles.logo}>
+          <Image
+            src={blackLogo} alt="Risk DAO logo" />
+        </div>
         <h1 className={styles.title}>Welcome to Risk DAO's interest rate simulator.</h1>
-
-        <p className={styles.description}>Get started by inputing your variables:</p>
-
+        <p className={styles.description}><a href="https://perdu.com">Read the paper</a> or get started by inputing your variables:</p>
         <div className={styles.grid}>
           <div className={styles.inputs}>
             Initial Supply:
@@ -121,17 +114,20 @@ export default function Home() {
             <br />
           </div>
           <div className={styles.control}>
-            Inputs Check
+            Inputs Checks:
             <br />
             <br />
-            initial supply: {initialSupplyCheck ? '✅' : '❌'}
+            <div className={styles.controlChecks}>
+              Initial supply: {initialSupplyCheck ? '✅' : '❌'}
+              <br />
+              Borrow function: {borrowCheck ? '✅' : '❌'}
+              <br />
+              Supply function: {supplyCheck ? '✅' : '❌'}
+            </div>
             <br />
-            Borrow function: {borrowCheck ? '✅' : '❌'}
             <br />
-            Supply function: {supplyCheck ? '✅' : '❌'}
-            <br />
-            <br />
-            <div style={{display:'flex', flexDirection: 'row', justifyContent: 'center' }}>
+
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
               <button
                 disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
                 onClick={(e) => runSimulation()}
@@ -141,19 +137,53 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* FAKE TERMINAL FOR SIMULATION OUTPUT */}
-        <div className={styles.fakeMenu}>
-          <div className={styles.fakeButtons + ' ' + styles.fakeClose}></div>
-          <div className={styles.fakeButtons + ' ' + styles.fakeMinimize}></div>
-          <div className={styles.fakeButtons + ' ' + styles.fakeZoom}></div>
-        </div>
-
-        <div className={styles.fakeScreen}>
-          <ol>
-            {simulationLog.map((line, i) => {
-              return <LogLine id={i} line={line} />;
-            })}
-          </ol>
+          <div className={styles.graphsContainer}>
+            <div className={styles.supplyGraph}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  width={500}
+                  height={300}
+                  data={plotData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="util"><Label value="Utilization" position="bottom" offset={1}/></XAxis>
+                  <YAxis />
+                  <Tooltip />
+                  <Legend layout='vertical' verticalAlign='bottom' />
+                  <Line type="monotone" dataKey="borrowApy" stroke="#8884d8" activeDot={{ r: 8 }} />
+                  <Line type="monotone" dataKey="supplyApy" stroke="#82ca9d" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className={styles.borrowGraph}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  width={500}
+                  height={300}
+                  data={plotData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="util"><Label value="Utilization" position="bottom" offset={1}/></XAxis>
+                  <YAxis />
+                  <Tooltip />
+                  <Legend layout='vertical' verticalAlign='bottom' />
+                  <Line type="monotone" dataKey="supply" stroke="#8884d8" activeDot={{ r: 8 }} />
+                  <Line type="monotone" dataKey="borrow" stroke="#82ca9d" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
         </div>
       </main>
       <footer className={styles.footer}>Powered by la Tribu</footer>

@@ -3,13 +3,18 @@
 }
 
 .main {
-  min-height: 100vh;
+  min-height: 50vh;
   padding: 4rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.logo{
+  padding:3rem;
+  flex:1;
 }
 
 .footer {
@@ -42,7 +47,8 @@
 .title {
   margin: 0;
   line-height: 1.15;
-  font-size: 3rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 
 .title,
@@ -50,14 +56,36 @@
   text-align: center;
 }
 
+.inputBlock{
+  text-align: left;
+}
+
 .description {
-  margin: 4rem 0;
+  margin: 2rem 0;
+  margin-top: 4rem;
   line-height: 1.5;
   font-size: 1.5rem;
 }
 
+.description a {
+  margin: 2rem 0;
+  margin-top: 4rem;
+  line-height: 1.5;
+  font-size: 1.5rem;
+  text-decoration: underline;
+}
+
 .code {
   background: #fafafa;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+.codered {
+  color: red;
   border-radius: 5px;
   padding: 0.75rem;
   font-size: 1.1rem;
@@ -70,7 +98,7 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 2000px;
 }
 .inputs {
   margin: 1rem;
@@ -82,6 +110,8 @@
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   max-width: 300px;
+  min-width: 200px;
+  min-height: 250px;
 }
 
 .inputs:hover,
@@ -105,26 +135,14 @@
 .control {
   margin: 1rem;
   padding: 1.5rem;
-  text-align: left;
   color: inherit;
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   max-width: 300px;
-}
-.controlWrong{
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
-  color: #b03e05;
-  border-color: #b03e05;
+  min-width: 200px;
+  min-height: 250px;
 }
 
 .control h2 {
@@ -141,6 +159,30 @@
 .logo {
   height: 1em;
   margin-left: 0.5rem;
+}
+.outputs{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 2000px;
+}
+
+.graphsContainer{
+  width:1200px;
+  height: 800px;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.supplyGraph{
+  width:500px;
+  height: 550px;
+}
+.borrowGraph{
+  width:500px;
+  height: 550px;
 }
 
 @media (max-width: 600px) {
@@ -162,52 +204,6 @@
   }
 }
 
-
-.fakeButtons {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  border: 1px solid #000;
-  position: relative;
-  top: 6px;
-  left: 6px;
-  background-color: #ff3b47;
-  border-color: #9d252b;
-  display: inline-block;
-}
-
-.fakeMinimize {
-  left: 11px;
-  background-color: #ffc100;
-  border-color: #9d802c;
-}
-
-.fakeZoom {
-  left: 16px;
-  background-color: #00d742;
-  border-color: #049931;
-}
-
-.fakeMenu {
-  width: 550px;
-  box-sizing: border-box;
-  height: 25px;
-  background-color: #bbb;
-  margin: 0 auto;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-}
-
-.fakeScreen {
-  background-color: #151515;
-  box-sizing: border-box;
-  width: 550px;
-  margin: 0 auto;
-  padding: 20px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
 .p {
   position: relative;
   left: 50%;
@@ -218,165 +214,4 @@
   white-space: normal;
   overflow: hidden;
   width: 0;
-}
-
-.span {
-  color: #fff;
-  font-weight: bold;
-}
-
-.line0 {
-  color: #9CD9F0;
-  -webkit-animation: type .5s 1s steps(20, end) forwards;
-  -moz-animation: type .5s 1s steps(20, end) forwards;
-  -o-animation: type .5s 1s steps(20, end) forwards;
-  animation: type .5s 1s steps(20, end) forwards;
-}
-
-.cursor0 {
-  -webkit-animation: blink 1s 2s 2 forwards;
-  -moz-animation: blink 1s 2s 2 forwards;
-  -o-animation: blink 1s 2s 2 forwards;
-  animation: blink 1s 2s 2 forwards;
-}
-
-.line1 {
-  color: #CDEE69;
-  -webkit-animation: type .5s 4.25s steps(20, end) forwards;
-  -moz-animation: type .5s 4.25s steps(20, end) forwards;
-  -o-animation: type .5s 4.25s steps(20, end) forwards;
-  animation: type .5s 4.25s steps(20, end) forwards;
-}
-
-.cursor1 {
-  -webkit-animation: blink 1s 5.25s 2 forwards;
-  -moz-animation: blink 1s 5.25s 2 forwards;
-  -o-animation: blink 1s 5.25s 2 forwards;
-  animation: blink 1s 5.25s 2 forwards;
-}
-
-.line3 {
-  color: #E09690;
-  -webkit-animation: type .5s 7.5s steps(20, end) forwards;
-  -moz-animation: type .5s 7.5s steps(20, end) forwards;
-  -o-animation: type .5s 7.5s steps(20, end) forwards;
-  animation: type .5s 7.5s steps(20, end) forwards;
-}
-
-.cursor3 {
-  -webkit-animation: blink 1s 8.5s 2 forwards;
-  -moz-animation: blink 1s 8.5s 2 forwards;
-  -o-animation: blink 1s 8.5s 2 forwards;
-  animation: blink 1s 8.5s 2 forwards;
-}
-
-.line4 {
-  color: #fff;
-  -webkit-animation: type .5s 10.75s steps(20, end) forwards;
-  -moz-animation: type .5s 10.75s steps(20, end) forwards;
-  -o-animation: type .5s 10.75s steps(20, end) forwards;
-  animation: type .5s 10.75s steps(20, end) forwards;
-}
-
-.cursor4 {
-  -webkit-animation: blink 1s 11.5s infinite;
-  -moz-animation: blink 1s 8.5s infinite;
-  -o-animation: blink 1s 8.5s infinite;
-  animation: blink 1s 8.5s infinite;
-}
-
-@-webkit-keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@-moz-keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@-o-keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes blink {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@-webkit-keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-@-moz-keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-@-o-keyframes type {
-  to {
-    width: 17em;
-  }
-}
-
-@keyframes type {
-  to {
-    width: 17em;
-  }
 }

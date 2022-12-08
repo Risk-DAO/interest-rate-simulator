@@ -65,6 +65,7 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
 }
 
 export type SimulatedResults = {
+    util:number,
     supply:number,
     supplyApy:number,
     borrow:number,
@@ -90,10 +91,11 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
             const borrowApy = protocolInterestRate(interestRateFormula, currentSupply, currentBorrow)
             results.push(
                 {
-                supply: currentSupply,
-                supplyApy: supplyApy,
-                borrow: currentBorrow,
-                borrowApy: borrowApy
+                util: Number(util.toFixed(2)),
+                supply: Number(currentSupply.toFixed(2)),
+                supplyApy: Number(supplyApy.toFixed(2)),
+                borrow: Number(currentBorrow.toFixed(2)),
+                borrowApy: Number(borrowApy.toFixed(2)),
             }
             )
             // console.log({currentSupply}, {supplyApy}, {currentBorrow}, {borrowApy})
@@ -109,10 +111,11 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         const borrowApy = protocolInterestRate(interestRateFormula,currentSupply, currentBorrow)
         results.push(
             {
-            supply: currentSupply,
-            supplyApy: supplyApy,
-            borrow: currentBorrow,
-            borrowApy: borrowApy
+            util: Number(util.toFixed(2)),
+            supply: Number(currentSupply.toFixed(2)),
+            supplyApy: Number(supplyApy.toFixed(2)),
+            borrow: Number(currentBorrow.toFixed(2)),
+            borrowApy: Number(borrowApy.toFixed(2)),
         }
         )
 
