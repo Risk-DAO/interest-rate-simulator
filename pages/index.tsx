@@ -152,12 +152,12 @@ export default function Home() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="util"><Label value="Utilization" position="bottom" offset={1} /></XAxis>
+                <XAxis dataKey="borrow"><Label value="Borrow" position="bottom" offset={1} /></XAxis>
                 <YAxis />
-                <Tooltip />
+                <Tooltip label="Borrow"/>
                 <Legend layout='vertical' verticalAlign='bottom' />
-                <Line type="monotone" dataKey="borrowApy" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="supplyApy" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="supplyApy" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="borrowApy" stroke="#82ca9d" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -175,12 +175,12 @@ export default function Home() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="util"><Label value="Utilization" position="bottom" offset={1} /></XAxis>
+                <XAxis dataKey="supply"><Label value="Supply" position="bottom" offset={1} /></XAxis>
                 <YAxis />
                 <Tooltip />
                 <Legend layout='vertical' verticalAlign='bottom' />
-                <Line type="monotone" dataKey="supply" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="borrow" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="supplyApy" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="borrowApy" stroke="#82ca9d" />
               </LineChart>
             </ResponsiveContainer>
           </div>

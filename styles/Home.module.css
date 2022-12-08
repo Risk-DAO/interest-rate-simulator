@@ -213,6 +213,9 @@
   .footer {
     border-color: #222;
   }
+  .footer .svg{
+    filter: invert(1);
+  }
   .code {
     background: #111;
   }
