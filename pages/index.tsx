@@ -63,9 +63,15 @@ export default function Home() {
         setSupplyFormula(input);
       }
     }
-    console.log(simulationLog);
   }
-  // simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand);
+  function runSimulation(){
+    const results = simulate(initialSupply, 0.001, 0.0001, interestFormula, supplyFormula, borrowFormula)
+    console.log({results})
+  }
+
+
+
+
   return (
     <div className={styles.container}>
       <Head>
@@ -98,6 +104,7 @@ export default function Home() {
               placeholder="0"
               value={borrowFormula}
               onChange={(e) => inputValidation('borrowFormula', e.target.value)}
+              title="Must be a function of interestRate"
             />
             <br />
             <br />
@@ -108,17 +115,10 @@ export default function Home() {
               placeholder="0"
               value={supplyFormula}
               onChange={(e) => inputValidation('supplyFormula', e.target.value)}
+              title="Must be a function of interestRate"
             />
             <br />
             <br />
-            <div style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <button
-                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
-                onClick={(e) => simulate(initialSupply, 0.001, 0.0001, interestFormula, supplyFormula, borrowFormula)}
-              >
-                run simulation
-              </button>
-            </div>
           </div>
           <div className={styles.control}>
             Inputs Check
@@ -129,6 +129,16 @@ export default function Home() {
             Borrow function: {borrowCheck ? '✅' : '❌'}
             <br />
             Supply function: {supplyCheck ? '✅' : '❌'}
+            <br />
+            <br />
+            <div style={{display:'flex', flexDirection: 'row', justifyContent: 'center' }}>
+              <button
+                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
+                onClick={(e) => runSimulation()}
+              >
+                run simulation
+              </button>
+            </div>
           </div>
         </div>
         {/* FAKE TERMINAL FOR SIMULATION OUTPUT */}
