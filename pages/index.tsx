@@ -20,15 +20,18 @@ export default function Home() {
   const [simulationLog, setSimulationLog] = useState<string[]>([]);
 
   //// SIMULATION JS
-  function supplyDemand(supplyFormula: string, interestRate: number) {
+  function supplyDemand(interestRate: number) {
+    console.log(`computing supply demand`);
     const supplyEvalResults: number = eval(supplyFormula);
     return supplyEvalResults;
   }
-  function borrowDemand(borrowFormula: string, interestRate: number) {
+
+  function borrowDemand(interestRate: number) {
+    console.log(`computing borrow demand`);
     const borrowEvalResults: number = eval(borrowFormula);
     return borrowEvalResults;
   }
-  function protocolInterestRate(interestFormula: string, supply: number, borrow: number) {
+  function protocolInterestRate(supply: number, borrow: number) {
     const interestEvalResults: number = eval(interestFormula);
     return interestEvalResults;
   }
@@ -39,6 +42,7 @@ export default function Home() {
     interestRateFunction: Function,
     supplyDemandFunction: Function,
   ) {
+    console.log(`finding new supply`);
     for (let newSupply = supply; ; newSupply += step) {
       const utilization = borrow / newSupply;
       const interstRate = interestRateFunction(newSupply, borrow) * utilization;
@@ -54,6 +58,7 @@ export default function Home() {
     interestRateFunction: Function,
     borrowDemandFunction: Function,
   ) {
+    console.log(`find new borrow`);
     for (let newBorrow = borrow; ; newBorrow += step) {
       const interestRate = interestRateFunction(supply, newBorrow);
       if (borrowDemandFunction(interestRate) < newBorrow) {
@@ -77,7 +82,6 @@ export default function Home() {
     }
 
     console.log({ supplyInterestRate });
-    setSimulationLog([...simulationLog, `supplyinterestrate is ${supplyInterestRate}`]);
     let borrow = 0;
     while (true) {
       const borrowRate = (borrow * supplyInterestRate) / initialSupply;
@@ -107,7 +111,7 @@ export default function Home() {
     let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyDemandFunction, borrowDemandFunction);
 
     console.log('initial borrow', currentBorrow);
-    setSimulationLog([...simulationLog, `initial borrow is ${currentBorrow}`]);
+    updateLogs(`initial borrow is ${currentBorrow}`);
 
     while (true) {
       const newSupply = findNewSupply(
@@ -144,10 +148,13 @@ export default function Home() {
   }
   function LogLine(props: LogLineProps) {
     return (
-      <li key={props.id} className={props.id % 2 ? styles.line0 : styles.line1}>
+      <li key={props.id} className={styles.code}>
         {props.line}
       </li>
     );
+  }
+  function updateLogs(log: string) {
+    setSimulationLog([...simulationLog, log]);
   }
 
   // IMPLEMENT INPUT VALIDATION HERE
@@ -179,7 +186,7 @@ export default function Home() {
     }
     console.log(simulationLog);
   }
-
+  // simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand);
   return (
     <div className={styles.container}>
       <Head>
