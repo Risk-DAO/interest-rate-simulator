@@ -159,7 +159,14 @@
   transition: color 0.15s ease, border-color 0.15s ease;
   max-width: 300px;
   min-width: 200px;
-  min-height: 250px;
+  min-height: 375px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.control button{
+  margin-bottom: 20px;
 }
 
 .control h2 {

@@ -10,8 +10,8 @@ import { useState } from 'react';
 
 export default function Home() {
   // Simulation parameters initialization
-  const stepSize: number = 0.0001;
-  const minChange: number = 0.001;
+  const [stepSize, setStepSize] = useState(0.0001);
+  const [minChange, setMinChange] = useState(0.001);
   const [interestFormula, setinterestFormula] = useState('70 * borrow / supply');
   const [initialSupply, setInitialSupply] = useState(1);
   const [borrowFormula, setBorrowFormula] = useState('100 - 5 * interestRate');
@@ -59,7 +59,7 @@ export default function Home() {
     }
   }
   function runSimulation() {
-    const results = simulate(initialSupply, 0.001, 0.0001, interestFormula, supplyFormula, borrowFormula)
+    const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula)
     setPlotData(results)
     console.log({ plotData })
   }
@@ -109,6 +109,28 @@ export default function Home() {
               value={supplyFormula}
               onChange={(e) => inputValidation('supplyFormula', e.target.value)}
               title="Must be a function of interestRate"
+            />
+            <br />
+            <br />
+            Step Size:
+            <br />
+            <input
+              type="text"
+              placeholder="0"
+              value={stepSize}
+              onChange={(e) => inputValidation('supplyFormula', e.target.value)}
+              disabled={true}
+            />
+            <br />
+            <br />
+            Minimum change:
+            <br />
+            <input
+              type="text"
+              placeholder="0"
+              value={minChange}
+              onChange={(e) => inputValidation('supplyFormula', e.target.value)}
+              disabled={true}
             />
             <br />
             <br />
