@@ -98,7 +98,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
                 borrowApy: Number(borrowApy.toFixed(2)),
             }
             )
-            // console.log({currentSupply}, {supplyApy}, {currentBorrow}, {borrowApy})
+            console.log(results)
         }
             break
         }
@@ -120,6 +120,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         )
 
         // console.log({currentSupply}, {supplyApy}, {currentBorrow}, {borrowApy})
+        firstIteration = false;
     }
     return results;
 }

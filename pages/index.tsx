@@ -1,9 +1,9 @@
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import Head from 'next/head';
-import Image from 'next/image'
+import Image from 'next/image';
 import { SimulatedResults } from '../components/simulation';
-import blackLogo from '../public/black-logo.png'
+import blackLogo from '../public/black-logo.png';
 import { simulate } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
@@ -24,6 +24,7 @@ export default function Home() {
   const [initialSupplyCheck, setInitialSupplyCheck] = useState(true);
   const [borrowCheck, setBorrowCheck] = useState(true);
   const [supplyCheck, setSupplyCheck] = useState(true);
+  const [console, setConsole] = useState(false);
 
   //logs variable
 
@@ -31,7 +32,6 @@ export default function Home() {
 
   // IMPLEMENT INPUT VALIDATION HERE
   function inputValidation(field: string, input: string) {
-    console.log({ plotData })
     if (field === 'initialSupply') {
       let inputValue: number = Number(input);
       if (inputValue > 0) {
@@ -61,7 +61,6 @@ export default function Home() {
   function runSimulation() {
     const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula)
     setPlotData(results)
-    console.log({ plotData })
   }
 
   return (
@@ -77,7 +76,7 @@ export default function Home() {
             src={blackLogo} alt="Risk DAO logo" />
         </div>
         <h1 className={styles.title}>Welcome to Risk DAO's interest rate simulator.</h1>
-        <p className={styles.description}><a href="https://perdu.com">Read the paper</a> or get started by inputing your variables:</p>
+        <p className={styles.description}><a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:</p>
         <div className={styles.grid}>
           <div className={styles.inputs}>
             Initial Supply:
@@ -120,6 +119,7 @@ export default function Home() {
               value={stepSize}
               onChange={(e) => inputValidation('supplyFormula', e.target.value)}
               disabled={true}
+              title="step size is fixed at the moment"
             />
             <br />
             <br />
@@ -131,6 +131,7 @@ export default function Home() {
               value={minChange}
               onChange={(e) => inputValidation('supplyFormula', e.target.value)}
               disabled={true}
+              title="minimum change is fixed at the moment"
             />
             <br />
             <br />
@@ -149,7 +150,12 @@ export default function Home() {
             <br />
             <br />
 
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <button
+                onClick={(e) => setConsole(!console)}
+              >
+                toggle console
+              </button>
               <button
                 disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
                 onClick={(e) => runSimulation()}
@@ -159,6 +165,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+        {console ?<div className={styles.console}>
+          {plotData.map((point, i) => <p className='code'>Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy} BorrowAPY:{point.borrowApy}</p>)}
+        </div> : ""}
         <div className={styles.graphsContainer}>
           <div className={styles.supplyGraph}>
             <ResponsiveContainer width="100%" height="100%">
@@ -174,10 +183,11 @@ export default function Home() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="borrow"><Label value="Borrow" position="bottom" offset={1} /></XAxis>
+                <XAxis dataKey="borrow"><Label value="Borrow" position="bottom" offset={0} /></XAxis>
+                <YAxis><Label value="APY" position={'left'} offset={-15} /></YAxis>
                 <YAxis />
                 <Tooltip label="Borrow"/>
-                <Legend layout='vertical' verticalAlign='bottom' />
+                <Legend layout='horizontal' verticalAlign='bottom'  wrapperStyle={{position:"relative"}} />
                 <Line type="monotone" dataKey="supplyApy" stroke="#8884d8" activeDot={{ r: 8 }} />
                 <Line type="monotone" dataKey="borrowApy" stroke="#82ca9d" />
               </LineChart>
@@ -197,10 +207,10 @@ export default function Home() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="supply"><Label value="Supply" position="bottom" offset={1} /></XAxis>
-                <YAxis />
+                <XAxis dataKey="supply"><Label value="Supply" position="bottom" offset={0} /></XAxis>
+                <YAxis><Label value="APY" position={'left'} offset={-15} /></YAxis>
                 <Tooltip />
-                <Legend layout='vertical' verticalAlign='bottom' />
+                <Legend layout='horizontal' verticalAlign='bottom' wrapperStyle={{position:"relative"}}/>
                 <Line type="monotone" dataKey="supplyApy" stroke="#8884d8" activeDot={{ r: 8 }} />
                 <Line type="monotone" dataKey="borrowApy" stroke="#82ca9d" />
               </LineChart>

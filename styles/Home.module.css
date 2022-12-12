@@ -4,19 +4,30 @@
 
 .main {
   min-height: 50vh;
-  padding: 4rem 0;
+  padding: 2rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 
 .logo{
-  padding:3rem;
+  padding:1rem;
   flex:1;
 }
-
+.console{
+    background: black;
+    color: white;
+    font-family: monospace;
+    width: 40%;
+    padding: 10px;
+    font-size: 11px;
+    height: 200px;
+    min-height: 0;
+    white-space: pre;
+    overflow: auto;
+}
 .footer {
   display: flex;
   flex: 1;
@@ -65,7 +76,7 @@
   margin: 0;
   line-height: 1.15;
   font-size: 2rem;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 .title,
@@ -78,8 +89,8 @@
 }
 
 .description {
-  margin: 2rem 0;
-  margin-top: 4rem;
+  margin: 1rem 0;
+  margin-top: 0rem;
   line-height: 1.5;
   font-size: 1.5rem;
 }
