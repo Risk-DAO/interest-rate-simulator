@@ -69,7 +69,7 @@ export default function Home() {
       <Head>
         <title>Interest Rate Simulator</title>
         <meta name="description" content="Risk's DAO DEFI interest rate simulator" />
-        <link rel="icon" href="/favicon.ico" />
+        <link className={styles.favicon} rel="icon" href="/favicon.svg" />
       </Head>
       <main className={styles.main}>
         <div className={styles.logo}>

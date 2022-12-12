@@ -234,6 +234,9 @@
   .footer .svg{
     filter: invert(1);
   }
+  .head {
+    filter: invert(1);
+  }
   .code {
     background: #111;
   }
