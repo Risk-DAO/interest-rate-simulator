@@ -39,6 +39,7 @@ export default function Home() {
         setInitialSupply(inputValue);
       } else {
         setInitialSupplyCheck(false);
+        setInitialSupply(inputValue);
       }
     } else if (field === 'borrowFormula') {
       if (input.includes('interestRate')) {
