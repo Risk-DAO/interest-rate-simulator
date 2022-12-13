@@ -72,6 +72,56 @@ export type SimulatedResults = {
     borrowApy:number
 }
 
+export type StepsResults = {
+    round: number,
+    type: string,
+    value: number
+}
+
+export function simulateSteps(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : StepsResults[] {
+    let currentSupply = initialSupply
+    let newSupply = initialSupply;
+    let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyFormula, borrowFormula)
+    let newBorrow = currentBorrow
+    let computing = true;
+    let supply = false;
+    let round = 0;
+    const results: StepsResults[] = [{
+        round: round,
+        type: "supply",
+        value: initialSupply
+    }];
+
+
+    while(computing){
+        round += 1
+        if(supply){
+            currentSupply = newSupply
+            newSupply = findNewSupply(currentSupply, currentBorrow, stepSize, interestRateFormula, supplyFormula);
+            results.push({
+                round: round,
+                type: "supply",
+                value: newSupply
+            })
+            supply = !supply
+            if(newSupply / currentSupply < (1 + minChange)){
+                computing = false
+            }
+        }
+        else if(!supply){
+            currentBorrow = newBorrow;
+            newBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFormula, borrowFormula);
+            results.push({
+                round: round,
+                type: "borrow",
+                value: newBorrow 
+            })
+            supply = !supply
+        }
+    }
+    return results
+}
+
 export function simulate(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : SimulatedResults[] {
     let currentSupply = initialSupply
     let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyFormula, borrowFormula)
