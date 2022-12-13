@@ -1,8 +1,8 @@
-import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { SimulatedResults, StepsResults } from '../components/simulation';
-import { simulate, simulateSteps } from '../components/simulation';
+import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { StepsResults, simulate, simulateSteps } from '../components/simulation';
 
 import Head from 'next/head';
+import { SimulatedResults } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
@@ -17,7 +17,7 @@ export default function Home() {
 
   //Simulation results
   const [plotData, setPlotData] = useState<SimulatedResults[]>([])
-  const [stepData, setStepData] = useState<StepsResults[]>([])
+  const [stepData, setStepData] = useState<lineArray | null>(null)
 
   //control variables
   const [initialSupplyCheck, setInitialSupplyCheck] = useState(true);
@@ -72,10 +72,26 @@ export default function Home() {
     const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula)
     setPlotData(results)
   }
+
+ type lineArray = {
+    supplyResult: StepsResults[],
+    borrowResult: StepsResults[],
+  }
   function runStepSimulation(){
+    let supply = []
+    let borrow = []
     const results = simulateSteps(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula)
-    setStepData(results)
     console.log({results})
+    for(let i = 0; i < results.length; i++){
+      if (results[i].type === 'supply'){
+        supply.push(results[i])
+      }
+      else{
+        borrow.push(results[i])
+      }
+    }
+    setStepData({supplyResult: supply, borrowResult: borrow})
+    console.log(stepData)
   }
 
   return (
@@ -227,27 +243,35 @@ export default function Home() {
             </ResponsiveContainer>
           </div>
           <div className={styles.borrowGraph}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                width={500}
-                height={300}
-                data={plotData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="supply"><Label value="Supply" position="bottom" offset={0} /></XAxis>
-                <YAxis><Label value="APY" position={'left'} offset={-15} /></YAxis>
-                <Tooltip />
-                <Legend layout='horizontal' verticalAlign='bottom' wrapperStyle={{position:"relative"}}/>
-                <Line type="monotone" dataKey="supplyApy" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="borrowApy" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%">
+        <ScatterChart
+          width={500}
+          height={400}
+          margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20,
+          }}
+        >
+          <CartesianGrid />
+          <XAxis type="number" dataKey="round" name="Step" unit="" label={{value: "Step", position:"bottom"}} />
+          <YAxis yAxisId="left" type="number" dataKey="value" name="Supply" unit="" stroke="#8884d8" />
+          <YAxis
+            yAxisId="right"
+            type="number"
+            dataKey="value"
+            name="Borrow"
+            unit=""
+            orientation="right"
+            stroke="#82ca9d"
+          />
+          <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+          <Legend layout='horizontal' verticalAlign='bottom'  wrapperStyle={{position:"relative"}} />
+          <Scatter yAxisId="left" name="Supply" data={stepData == null ? [] : stepData.supplyResult} fill="#8884d8" />
+          <Scatter yAxisId="right" name="Borrow" data={stepData == null ? [] : stepData.borrowResult} fill="#82ca9d" />
+        </ScatterChart>
+      </ResponsiveContainer>
           </div>
         </div>
       </main>
