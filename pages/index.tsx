@@ -76,7 +76,7 @@ export default function Home() {
           <Image
             src={blackLogo} alt="Risk DAO logo" />
         </div>
-        <h1 className={styles.title}>Welcome to Risk DAO's interest rate simulator.</h1>
+        <h1 className={styles.title}>Welcome to Risk DAO&apos;s interest rate simulator.</h1>
         <p className={styles.description}><a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:</p>
         <div className={styles.grid}>
           <div className={styles.inputs}>
@@ -167,7 +167,7 @@ export default function Home() {
           </div>
         </div>
         {console ?<div className={styles.console}>
-          {plotData.map((point, i) => <p className='code'>Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy} BorrowAPY:{point.borrowApy}</p>)}
+          {plotData.map((point, i) => <p className='code' key={i}>Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy} BorrowAPY:{point.borrowApy}</p>)}
         </div> : ""}
         <div className={styles.graphsContainer}>
           <div className={styles.supplyGraph}>
