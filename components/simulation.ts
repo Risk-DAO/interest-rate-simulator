@@ -82,7 +82,6 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
     let currentSupply = initialSupply
     let newSupply = initialSupply;
     let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyFormula, borrowFormula)
-    let newBorrow = currentBorrow
     let computing = true;
     let supply = false;
     let round = 0;
@@ -109,12 +108,11 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
             }
         }
         else if(!supply){
-            currentBorrow = newBorrow;
-            newBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFormula, borrowFormula);
+            currentBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFormula, borrowFormula);
             results.push({
                 round: round,
                 type: "borrow",
-                value: newBorrow 
+                value: currentBorrow 
             })
             supply = !supply
         }
