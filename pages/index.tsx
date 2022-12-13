@@ -1,10 +1,8 @@
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { SimulatedResults, StepsResults } from '../components/simulation';
+import { simulate, simulateSteps } from '../components/simulation';
 
 import Head from 'next/head';
-import Image from 'next/image';
-import { SimulatedResults } from '../components/simulation';
-import blackLogo from '../public/black-logo.png';
-import { simulate } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
@@ -19,12 +17,14 @@ export default function Home() {
 
   //Simulation results
   const [plotData, setPlotData] = useState<SimulatedResults[]>([])
+  const [stepData, setStepData] = useState<StepsResults[]>([])
 
   //control variables
   const [initialSupplyCheck, setInitialSupplyCheck] = useState(true);
   const [borrowCheck, setBorrowCheck] = useState(true);
   const [supplyCheck, setSupplyCheck] = useState(true);
-  const [console, setConsole] = useState(false);
+  const [interestCheck, setInterestCheck] = useState(true);
+  const [terminal, setTerminal] = useState(false);
 
   //logs variable
 
@@ -58,10 +58,24 @@ export default function Home() {
         setSupplyFormula(input);
       }
     }
+    else if (field === 'interestFormula') {
+      if (input.includes('supply') && input.includes('borrow')) {
+        setInterestCheck(true);
+        setinterestFormula(input);
+      } else {
+        setInterestCheck(false);
+        setinterestFormula(input);
+      }
+    }
   }
   function runSimulation() {
     const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula)
     setPlotData(results)
+  }
+  function runStepSimulation(){
+    const results = simulateSteps(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula)
+    setStepData(results)
+    console.log({results})
   }
 
   return (
@@ -73,8 +87,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <div className={styles.logo}>
-          <Image
-            src={blackLogo} alt="Risk DAO logo" />
+          <img src="black-logo.png" alt="Risk DAO logo" />
         </div>
         <h1 className={styles.title}>Welcome to Risk DAO&apos;s interest rate simulator.</h1>
         <p className={styles.description}><a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:</p>
@@ -109,6 +122,17 @@ export default function Home() {
               value={supplyFormula}
               onChange={(e) => inputValidation('supplyFormula', e.target.value)}
               title="Must be a function of interestRate"
+            />
+            <br />
+            <br />
+            Interest Rate Function:
+            <br />
+            <input
+              type="text"
+              placeholder="0"
+              value={interestFormula}
+              onChange={(e) => inputValidation('interestFormula', e.target.value)}
+              title="Must be a function of borrow and supply"
             />
             <br />
             <br />
@@ -147,26 +171,34 @@ export default function Home() {
               Borrow function: {borrowCheck ? '✅' : '❌'}
               <br />
               Supply function: {supplyCheck ? '✅' : '❌'}
+              <br />
+              interest function: {interestCheck ? '✅' : '❌'}
             </div>
             <br />
             <br />
 
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <button
-                onClick={(e) => setConsole(!console)}
+                onClick={(e) => setTerminal(!terminal)}
               >
-                toggle console
+                toggle terminal
               </button>
               <button
-                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck)}
+                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck && interestCheck)}
                 onClick={(e) => runSimulation()}
               >
                 run simulation
               </button>
+              <button
+                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck && interestCheck)}
+                onClick={(e) => runStepSimulation()}
+              >
+                run step simulation
+              </button>
             </div>
           </div>
         </div>
-        {console ?<div className={styles.console}>
+        {terminal ?<div className={styles.terminal}>
           {plotData.map((point, i) => <p className='code' key={i}>Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy} BorrowAPY:{point.borrowApy}</p>)}
         </div> : ""}
         <div className={styles.graphsContainer}>
