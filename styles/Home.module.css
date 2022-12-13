@@ -204,7 +204,7 @@
 }
 
 .graphsContainer{
-  width:1200px;
+  width:1400px;
   height: 800px;
   display: flex;
   flex: 1;
@@ -212,11 +212,11 @@
   justify-content: space-around;
 }
 .supplyGraph{
-  width:500px;
+  width:700px;
   height: 550px;
 }
 .borrowGraph{
-  width:500px;
+  width:700px;
   height: 550px;
 }
 

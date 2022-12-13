@@ -74,7 +74,6 @@ export type SimulatedResults = {
 
 export type StepsResults = {
     round: number,
-    x: number,
     type: string,
     value: number
 }
@@ -88,7 +87,6 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
     let round = 0;
     const results: StepsResults[] = [{
         round: round,
-        x: 0,
         type: "supply",
         value: initialSupply
     }];
@@ -101,9 +99,8 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
             newSupply = findNewSupply(currentSupply, currentBorrow, stepSize, interestRateFormula, supplyFormula);
             results.push({
                 round: round,
-                x: 0,
                 type: "supply",
-                value: Number(newSupply.toFixed(2))
+                value: Number(newSupply.toFixed(3))
             })
             supply = !supply
             if(newSupply / currentSupply < (1 + minChange)){
@@ -114,9 +111,8 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
             currentBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFormula, borrowFormula);
             results.push({
                 round: round,
-                x: 1,
                 type: "borrow",
-                value: Number(currentBorrow.toFixed(2)) 
+                value: Number(currentBorrow.toFixed(3)) 
             })
             supply = !supply
         }

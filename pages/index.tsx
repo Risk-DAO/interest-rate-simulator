@@ -16,7 +16,7 @@ export default function Home() {
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
 
   //Simulation results
-  const [plotData, setPlotData] = useState<SimulatedResults[]>([])
+  const [plotData, setPlotData] = useState<SimulatedResults[] | null>(null)
   const [stepData, setStepData] = useState<lineArray | null>(null)
 
   //control variables
@@ -188,7 +188,7 @@ export default function Home() {
               <br />
               Supply function: {supplyCheck ? '✅' : '❌'}
               <br />
-              interest function: {interestCheck ? '✅' : '❌'}
+              Interest function: {interestCheck ? '✅' : '❌'}
             </div>
             <br />
             <br />
@@ -215,9 +215,10 @@ export default function Home() {
           </div>
         </div>
         {terminal ?<div className={styles.terminal}>
-          {plotData.map((point, i) => <p className='code' key={i}>Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy} BorrowAPY:{point.borrowApy}</p>)}
+          {plotData?.map((point, i) => <p className='code' key={i}>Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy} BorrowAPY:{point.borrowApy}</p>)}
         </div> : ""}
         <div className={styles.graphsContainer}>
+          {plotData ? 
           <div className={styles.supplyGraph}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -242,10 +243,12 @@ export default function Home() {
               </LineChart>
             </ResponsiveContainer>
           </div>
+          : ''}
+          {stepData ? 
           <div className={styles.borrowGraph}>
           <ResponsiveContainer width="100%" height="100%">
         <ScatterChart
-          width={500}
+          width={700}
           height={400}
           margin={{
             top: 20,
@@ -255,24 +258,17 @@ export default function Home() {
           }}
         >
           <CartesianGrid />
-          <XAxis type="number" dataKey="round" name="Step" unit="" label={{value: "Step", position:"bottom"}} />
-          <YAxis yAxisId="left" type="number" dataKey="value" name="Supply" unit="" stroke="#8884d8" />
-          <YAxis
-            yAxisId="right"
-            type="number"
-            dataKey="value"
-            name="Borrow"
-            unit=""
-            orientation="right"
-            stroke="#82ca9d"
-          />
+          <XAxis type="number" dataKey="round" name="Step" unit="" label={{value: "Simulation Step", position:"bottom"}} domain={stepData == null ? [0,1] : [0, stepData?.supplyResult.length*2 + 1]} />
+          <YAxis type="number" dataKey="value" name="Value" unit="" stroke="#8884d8" />
+          
           <Tooltip cursor={{ strokeDasharray: '3 3' }} />
           <Legend layout='horizontal' verticalAlign='bottom'  wrapperStyle={{position:"relative"}} />
-          <Scatter yAxisId="left" name="Supply" data={stepData == null ? [] : stepData.supplyResult} fill="#8884d8" />
-          <Scatter yAxisId="right" name="Borrow" data={stepData == null ? [] : stepData.borrowResult} fill="#82ca9d" />
+          <Scatter  name="Supply" data={stepData == null ? [] : stepData.supplyResult} fill="#82ca9d" />
+          <Scatter  name="Borrow" data={stepData == null ? [] : stepData.borrowResult} fill="#8884d8" />
         </ScatterChart>
       </ResponsiveContainer>
           </div>
+          : ''}
         </div>
       </main>
       <footer className={styles.footer}>
