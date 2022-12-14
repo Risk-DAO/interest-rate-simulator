@@ -127,6 +127,7 @@
   justify-content: center;
   flex-wrap: wrap;
   max-width: 2000px;
+  flex-direction: row;
 }
 .inputs {
   margin: 1rem;
@@ -202,9 +203,17 @@
   flex-wrap: wrap;
   max-width: 2000px;
 }
+.customTooltip{
+  background-color: white;
+  border: #222;
+  border: solid;
+  border-width: 0.1ex;
+  padding-left: 7px;
+  padding-right: 7px;
+}
 
 .graphsContainer{
-  width:1400px;
+  width:2100px;
   height: 800px;
   display: flex;
   flex: 1;

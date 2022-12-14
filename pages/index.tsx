@@ -10,6 +10,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ZAxis,
 } from 'recharts';
 import { StepsResults, simulate, simulateSteps } from '../components/simulation';
 
@@ -136,6 +137,20 @@ export default function Home() {
         </svg>
       );
     }
+  };
+
+  const customTooltip = (props: any) => {
+    const { active, payload, label } = props;
+    if (active && payload && payload.length) {
+      console.log(payload);
+      return (
+        <div className={styles.customTooltip}>
+          <p className="label">{`Step : ${payload[1].payload.round}`}</p>
+          <p className="desc">{`${payload[1].payload.type} : ${payload[1].payload.value}`}</p>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -331,6 +346,49 @@ export default function Home() {
                   <Legend layout="horizontal" verticalAlign="bottom" wrapperStyle={{ position: 'relative' }} />
                   <Scatter name="Supply" data={stepData == null ? [] : stepData.supplyResult} fill="#82ca9d" />
                   <Scatter name="Borrow" data={stepData == null ? [] : stepData.borrowResult} fill="#8884d8" />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            ''
+          )}
+          {onePlot ? (
+            <div className={styles.supplyGraph}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart
+                  width={500}
+                  height={400}
+                  margin={{
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20,
+                  }}
+                >
+                  <CartesianGrid />
+                  <XAxis type="number" dataKey="axis" name="" unit="" tick={false} />
+                  <YAxis
+                    yAxisId="left"
+                    type="number"
+                    dataKey="value"
+                    name="value"
+                    unit=""
+                    label={{ value: 'Supply', position: 'bottom', offset: 10 }}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    type="number"
+                    dataKey="value"
+                    name="value"
+                    unit=""
+                    orientation="right"
+                    label={{ value: 'Borrow', position: 'bottom', offset: 10 }}
+                  />
+                  <Tooltip content={customTooltip} />
+                  <ZAxis type="number" range={[100]} />
+                  <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                  <Scatter yAxisId="left" name="" data={onePlot} fill="#8884d8" line shape="dot" />
+                  <Scatter yAxisId="right" name="" data={onePlot} fill="#8884d8" line shape="dot" />
                 </ScatterChart>
               </ResponsiveContainer>
             </div>
