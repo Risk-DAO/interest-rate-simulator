@@ -5,12 +5,9 @@ import {
   Line,
   LineChart,
   ResponsiveContainer,
-  Scatter,
-  ScatterChart,
   Tooltip,
   XAxis,
-  YAxis,
-  ZAxis,
+  YAxis
 } from 'recharts';
 import { StepsResults, simulate, simulateSteps } from '../components/simulation';
 
@@ -135,13 +132,13 @@ export default function Home() {
   };
 
   const customTooltip = (props: any) => {
-    const { active, payload, label } = props;
+    const { active, payload } = props;
     if (active && payload && payload.length) {
       console.log(payload);
       return (
         <div className={styles.customTooltip}>
-          <p className="label">{`Step : ${payload[1].payload.round}`}</p>
-          <p className="desc">{`${payload[1].payload.type} : ${payload[1].payload.value}`}</p>
+          <p className="label">{`Step : ${payload[0].payload.round}`}</p>
+          <p className="desc">{`${payload[0].payload.type} : ${payload[0].payload.value}`}</p>
         </div>
       );
     }
@@ -300,90 +297,13 @@ export default function Home() {
                     <Label value="Simulation Step" position="bottom" offset={0} />
                   </XAxis>
                   <YAxis>
-                    <Label value="Value" position={'left'} offset={-15} />
+                    <Label value="Value" position={'left'} offset={-20} />
                   </YAxis>
                   <YAxis />
-                  <Tooltip label="Borrow" />
+                  <Tooltip content={customTooltip} />
                   <Legend layout="horizontal" verticalAlign="bottom" wrapperStyle={{ position: 'relative' }} />
                   <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} dot={customDot} />
                 </LineChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            ''
-          )}
-          {stepData ? (
-            <div className={styles.borrowGraph}>
-              <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart
-                  width={700}
-                  height={400}
-                  margin={{
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 20,
-                  }}
-                >
-                  <CartesianGrid />
-                  <XAxis
-                    type="number"
-                    dataKey="round"
-                    name="Step"
-                    unit=""
-                    label={{ value: 'Simulation Step', position: 'bottom' }}
-                    domain={stepData == null ? [0, 1] : [0, stepData?.supplyResult.length * 2 + 1]}
-                  />
-                  <YAxis type="number" dataKey="value" name="Value" unit="" stroke="#8884d8" />
-
-                  <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                  <Legend layout="horizontal" verticalAlign="bottom" wrapperStyle={{ position: 'relative' }} />
-                  <Scatter name="Supply" data={stepData == null ? [] : stepData.supplyResult} fill="#82ca9d" />
-                  <Scatter name="Borrow" data={stepData == null ? [] : stepData.borrowResult} fill="#8884d8" />
-                </ScatterChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            ''
-          )}
-          {onePlot ? (
-            <div className={styles.supplyGraph}>
-              <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart
-                  width={500}
-                  height={400}
-                  margin={{
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 20,
-                  }}
-                >
-                  <CartesianGrid />
-                  <XAxis type="number" dataKey="axis" name="" unit="" tick={false} />
-                  <YAxis
-                    yAxisId="left"
-                    type="number"
-                    dataKey="value"
-                    name="value"
-                    unit=""
-                    label={{ value: 'Supply', position: 'bottom', offset: 10 }}
-                  />
-                  <YAxis
-                    yAxisId="right"
-                    type="number"
-                    dataKey="value"
-                    name="value"
-                    unit=""
-                    orientation="right"
-                    label={{ value: 'Borrow', position: 'bottom', offset: 10 }}
-                  />
-                  <Tooltip content={customTooltip} />
-                  <ZAxis type="number" range={[100]} />
-                  <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                  <Scatter yAxisId="left" name="" data={onePlot} fill="#8884d8" line />
-                  <Scatter yAxisId="right" name="" data={onePlot} fill="#8884d8" line />
-                </ScatterChart>
               </ResponsiveContainer>
             </div>
           ) : (
