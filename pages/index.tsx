@@ -25,11 +25,7 @@ export default function Home() {
 
   //interest function defaults
   const withoutKink = '70 * borrow / supply';
-  const withKink =
-    'const kink = 0.8' +
-    'const util = borrow / supply' +
-    'if(util < kink) {100 * util / kink}' +
-    ' else {100 * util * kink}';
+  const withKink ='borrow/supply > 0.7 ? (borrow/supply) * 0.5 : (borrow/supply) * 0.1';
 
   /// INTERFACE JS
   type lineArray = {
@@ -114,6 +110,7 @@ export default function Home() {
         <p className={styles.description}>
           <a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:
         </p>
+        <div className={styles.userContent}>
         <div className={styles.grid}>
           <div className={styles.inputs}>
             <label>Initial Supply (M):</label>
@@ -161,9 +158,11 @@ export default function Home() {
             <br />
             <br />
             <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
-            <button onClick={(e) => console.log(interestFormula)}>with kink preset</button>
-            <button onClick={(e) => runStepSimulation()}>run step simulation</button>
+            <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
           </div>
+          
+          </div>
+          <button onClick={(e) => runStepSimulation()}>run step simulation</button>
         </div>
         {terminal ? (
           <div className={styles.terminal}>
@@ -196,7 +195,7 @@ export default function Home() {
                   <XAxis dataKey="round">
                     <Label value="Simulation Step" position="bottom" offset={0} />
                   </XAxis>
-                  <YAxis>
+                  <YAxis unit="M">
                     <Label value="Value" position={'left'} offset={-20} />
                   </YAxis>
                   <YAxis />
