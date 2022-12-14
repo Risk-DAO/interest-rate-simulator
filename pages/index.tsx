@@ -19,6 +19,7 @@ export default function Home() {
   const [plotData, setPlotData] = useState<SimulatedResults[] | null>(null);
   const [stepData, setStepData] = useState<lineArray | null>(null);
   const [onePlot, setOnePlot] = useState<StepsResults[] | null>(null);
+  const [simulationLogs, setSimulationLogs] = useState<logs[]>([]);
 
   //control variables
   const [terminal, setTerminal] = useState(false);
@@ -33,19 +34,34 @@ export default function Home() {
     supplyResult: StepsResults[];
     borrowResult: StepsResults[];
   };
+  type logs = {
+    step: number,
+    type: string,
+    value: number,
+    apy: number
+  }
   function runStepSimulation() {
     let supply = [];
     let borrow = [];
+    let logArray = []
     const results = simulateSteps(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
     console.log({ results });
     setOnePlot(results);
     for (let i = 0; i < results.length; i++) {
+      logArray.push({
+        step: results[i].round,
+        type: results[i].type,
+        value: results[i].value,
+        apy: results[i].apy
+      })
       if (results[i].type === 'supply') {
         supply.push(results[i]);
       } else {
         borrow.push(results[i]);
       }
     }
+    logArray= logArray.slice(-2)
+    setSimulationLogs(logArray)
     setStepData({ globalResult: results, supplyResult: supply, borrowResult: borrow });
     console.log(stepData);
   }
@@ -175,10 +191,9 @@ export default function Home() {
           </div>
           {terminal ? (
             <div className={styles.terminal}>
-              {plotData?.map((point, i) => (
+              {simulationLogs?.map((point, i) => (
                 <p className="code" key={i}>
-                  Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy}{' '}
-                  BorrowAPY:{point.borrowApy}
+                  Step: {point.step} --- Type: {point.type} --- Value: {point.value} --- APY: {point.apy}
                 </p>
               ))}
             </div>
