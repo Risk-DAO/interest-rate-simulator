@@ -1,5 +1,5 @@
-import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { StepsResults, simulate, simulateSteps } from '../components/simulation';
+import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { StepsResults, simulateSteps } from '../components/simulation';
 
 import Head from 'next/head';
 import { SimulatedResults } from '../components/simulation';
@@ -23,14 +23,15 @@ export default function Home() {
   //control variables
   const [terminal, setTerminal] = useState(false);
 
-  //logs variable
+  //interest function defaults
+  const withoutKink = '70 * borrow / supply';
+  const withKink =
+    'const kink = 0.8' +
+    'const util = borrow / supply' +
+    'if(util < kink) {100 * util / kink}' +
+    ' else {100 * util * kink}';
 
   /// INTERFACE JS
-  function runSimulation() {
-    const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
-    setPlotData(results);
-  }
-
   type lineArray = {
     globalResult: StepsResults[];
     supplyResult: StepsResults[];
@@ -115,18 +116,16 @@ export default function Home() {
         </p>
         <div className={styles.grid}>
           <div className={styles.inputs}>
-            Initial Supply:
-            <br />
+            <label>Initial Supply (M):</label>
             <input
               type="number"
+              minLength={1}
               value={initialSupply}
-              placeholder="0"
               onChange={(e) => setInitialSupply(Number(e.target.value))}
             />
             <br />
             <br />
-            Borrow Function:
-            <br />
+            <label>Borrow Function:</label>
             <input
               type="text"
               placeholder="0"
@@ -136,8 +135,7 @@ export default function Home() {
             />
             <br />
             <br />
-            Supply Function:
-            <br />
+            <label>Supply Function:</label>
             <input
               type="text"
               placeholder="0"
@@ -147,20 +145,24 @@ export default function Home() {
             />
             <br />
             <br />
+            {/* <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button> */}
+          </div>
+          <div className={styles.inputs}>
             Interest Rate Function:
             <br />
-            <input
-              type="text"
-              placeholder="0"
-              value={interestFormula}
+            <textarea
+              rows={5}
+              cols={30}
+              name="text"
+              placeholder="Enter text"
               onChange={(e) => setInterestFormula(e.target.value)}
-            />
+              value={interestFormula}
+            ></textarea>
             <br />
             <br />
+            <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
+            <button onClick={(e) => console.log(interestFormula)}>with kink preset</button>
             <button onClick={(e) => runStepSimulation()}>run step simulation</button>
-            {/* <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
-            <button onClick={(e) => runSimulation()}>run simulation</button>
-           */}
           </div>
         </div>
         {terminal ? (
@@ -176,18 +178,18 @@ export default function Home() {
           ''
         )}
         <div className={styles.graphsContainer}>
-          {onePlot ? (
+          {true ? (
             <div className={styles.supplyGraph}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   width={500}
                   height={300}
-                  data={onePlot}
+                  data={onePlot ? onePlot : undefined}
                   margin={{
                     top: 5,
                     right: 30,
                     left: 20,
-                    bottom: 5,
+                    bottom: 15,
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
@@ -199,7 +201,6 @@ export default function Home() {
                   </YAxis>
                   <YAxis />
                   <Tooltip content={customTooltip} />
-                  <Legend layout="horizontal" verticalAlign="bottom" wrapperStyle={{ position: 'relative' }} />
                   <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} dot={customDot} />
                 </LineChart>
               </ResponsiveContainer>

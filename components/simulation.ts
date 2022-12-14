@@ -90,7 +90,7 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
     const results: StepsResults[] = [{
         round: round,
         axis: 0,
-        type: "supply",
+        type: "Supply",
         value: initialSupply,
         apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * (currentBorrow / currentSupply)).toFixed(3))
     }];
@@ -104,7 +104,7 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
             results.push({
                 round: round,
                 axis: 0,
-                type: "supply",
+                type: "Supply",
                 value: Number(newSupply.toFixed(3)),
                 apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * (currentBorrow / newSupply)).toFixed(3))
             })
@@ -118,7 +118,7 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
             results.push({
                 round: round,
                 axis: 1,
-                type: "borrow",
+                type: "Borrow",
                 value: Number(currentBorrow.toFixed(3)),
                 apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow)).toFixed(3))
             })
