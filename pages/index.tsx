@@ -196,7 +196,7 @@ export default function Home() {
                     <Label value="Simulation Step" position="bottom" offset={0} />
                   </XAxis>
                   <YAxis unit="M">
-                    <Label value="Value" position={'left'} offset={-20} />
+                    <Label value="Value" position={'left'} angle={-90} offset={-10} />
                   </YAxis>
                   <YAxis />
                   <Tooltip content={customTooltip} />
