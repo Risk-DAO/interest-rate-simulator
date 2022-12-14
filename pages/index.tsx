@@ -157,8 +157,10 @@ export default function Home() {
             ></textarea>
             <br />
             <br />
+            <div className={styles.presetButtons}>
             <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
             <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
+            </div>
           </div>
           
           </div>
