@@ -20,13 +20,25 @@
     background: black;
     color: white;
     font-family: monospace;
-    width: 40%;
+    width: 20%;
     padding: 10px;
     font-size: 11px;
-    height: 200px;
+    height: 380px;
     min-height: 0;
     white-space: pre;
     overflow: auto;
+    box-shadow: 0rem 0.25rem 1rem rgba(128, 128, 128, 0.25), 0rem -0.25rem 1rem rgba(128, 128, 128, 0.25) !important;
+}
+.centering{
+  color: white;
+  font-family: monospace;
+  width: 20%;
+  padding: 10px;
+  font-size: 11px;
+  height: 200px;
+  min-height: 0;
+  white-space: pre;
+  overflow: auto;
 }
 .footer {
   display: flex;
@@ -120,6 +132,14 @@
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
 }
+.contentTerminal{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+}
 
 .userContent{
   display: flex;
@@ -130,6 +150,7 @@
   padding: 20px;
   box-shadow: 0rem 0.25rem 1rem rgba(128, 128, 128, 0.25), 0rem -0.25rem 1rem rgba(128, 128, 128, 0.25) !important;
 }
+
 
 .userContent button{
   border: 0;

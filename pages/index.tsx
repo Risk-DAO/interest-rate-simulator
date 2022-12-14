@@ -25,7 +25,7 @@ export default function Home() {
 
   //interest function defaults
   const withoutKink = '70 * borrow / supply';
-  const withKink ='borrow/supply > 0.7 ? (borrow/supply) * 0.5 : (borrow/supply) * 0.1';
+  const withKink = 'borrow/supply > 0.7 ? (borrow/supply) * 0.9 : (borrow/supply) * 0.7';
 
   /// INTERFACE JS
   type lineArray = {
@@ -87,8 +87,8 @@ export default function Home() {
       return (
         <div className={styles.customTooltip}>
           <p className="label">{`Step : ${payload[0].payload.round}`}</p>
-          <p className="desc">{`${payload[0].payload.type} : ${payload[0].payload.value}`}</p>
-          <p className="desc">{`APY : ${payload[0].payload.apy}`}</p>
+          <p className="desc">{`${payload[0].payload.type} : ${payload[0].payload.value}M`}</p>
+          <p className="desc">{`APY : ${payload[0].payload.apy}%`}</p>
         </div>
       );
     }
@@ -110,74 +110,82 @@ export default function Home() {
         <p className={styles.description}>
           <a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:
         </p>
-        <div className={styles.userContent}>
-        <div className={styles.grid}>
-          <div className={styles.inputs}>
-            <label>Initial Supply (M):</label>
-            <input
-              type="number"
-              minLength={1}
-              value={initialSupply}
-              onChange={(e) => setInitialSupply(Number(e.target.value))}
-            />
-            <br />
-            <br />
-            <label>Borrow Function:</label>
-            <input
-              type="text"
-              placeholder="0"
-              value={borrowFormula}
-              onChange={(e) => setBorrowFormula(e.target.value)}
-              title="Must be a function of interestRate"
-            />
-            <br />
-            <br />
-            <label>Supply Function:</label>
-            <input
-              type="text"
-              placeholder="0"
-              value={supplyFormula}
-              onChange={(e) => setSupplyFormula(e.target.value)}
-              title="Must be a function of interestRate"
-            />
-            <br />
-            <br />
-            {/* <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button> */}
-          </div>
-          <div className={styles.inputs}>
-            Interest Rate Function:
-            <br />
-            <textarea
-              rows={5}
-              cols={30}
-              name="text"
-              placeholder="Enter text"
-              onChange={(e) => setInterestFormula(e.target.value)}
-              value={interestFormula}
-            ></textarea>
-            <br />
-            <br />
-            <div className={styles.presetButtons}>
-            <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
-            <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
-            </div>
-          </div>
-          
-          </div>
-          <button onClick={(e) => runStepSimulation()}>run step simulation</button>
-        </div>
+        <div className={styles.contentTerminal}>
         {terminal ? (
-          <div className={styles.terminal}>
-            {plotData?.map((point, i) => (
-              <p className="code" key={i}>
-                Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy}{' '}
-                BorrowAPY:{point.borrowApy}
-              </p>
-            ))}
+            <div className={styles.centering}>
+            </div>
+          ) : (
+            ''
+          )}
+          <div className={styles.userContent}>
+            <div className={styles.grid}>
+              <div className={styles.inputs}>
+                <label>Initial Supply (M):</label>
+                <input
+                  type="number"
+                  minLength={1}
+                  value={initialSupply}
+                  onChange={(e) => setInitialSupply(Number(e.target.value))}
+                />
+                <br />
+                <br />
+                <label>Borrow Function:</label>
+                <input
+                  type="text"
+                  placeholder="0"
+                  value={borrowFormula}
+                  onChange={(e) => setBorrowFormula(e.target.value)}
+                  title="Must be a function of interestRate"
+                />
+                <br />
+                <br />
+                <label>Supply Function:</label>
+                <input
+                  type="text"
+                  placeholder="0"
+                  value={supplyFormula}
+                  onChange={(e) => setSupplyFormula(e.target.value)}
+                  title="Must be a function of interestRate"
+                />
+                <br />
+                <br />
+              </div>
+              <div className={styles.inputs}>
+                Interest Rate Function:
+                <br />
+                <textarea
+                  rows={5}
+                  cols={30}
+                  name="text"
+                  placeholder="Enter text"
+                  onChange={(e) => setInterestFormula(e.target.value)}
+                  value={interestFormula}
+                ></textarea>
+                <br />
+                <br />
+                <div className={styles.presetButtons}>
+                  <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
+                  <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
+                </div>
+              </div>
+
+            </div>
+            <button onClick={(e) => runStepSimulation()}>run step simulation</button>
+            <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
           </div>
-        ) : (
-          ''
-        )}
+          {terminal ? (
+            <div className={styles.terminal}>
+              {plotData?.map((point, i) => (
+                <p className="code" key={i}>
+                  Utilization: {point.util} Borrow :{point.borrow} Supply: {point.supply} SupplyAPY{point.supplyApy}{' '}
+                  BorrowAPY:{point.borrowApy}
+                </p>
+              ))}
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
         <div className={styles.graphsContainer}>
           {true ? (
             <div className={styles.supplyGraph}>

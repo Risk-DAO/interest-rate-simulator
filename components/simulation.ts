@@ -87,6 +87,7 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
     let computing = true;
     let supply = false;
     let round = 0;
+    let failsafe = 0
     const results: StepsResults[] = [{
         round: round,
         axis: 0,
@@ -97,6 +98,7 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
 
 
     while(computing){
+        failsafe += 1
         round += 1
         if(supply){
             currentSupply = newSupply
@@ -123,6 +125,9 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
                 apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow)).toFixed(3))
             })
             supply = !supply
+        }
+        if(failsafe > 300){
+            break
         }
     }
     return results
