@@ -1,14 +1,4 @@
-import {
-  CartesianGrid,
-  Label,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from 'recharts';
+import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StepsResults, simulate, simulateSteps } from '../components/simulation';
 
 import Head from 'next/head';
@@ -20,7 +10,7 @@ export default function Home() {
   // Simulation parameters initialization
   const [stepSize, setStepSize] = useState(0.0001);
   const [minChange, setMinChange] = useState(0.001);
-  const [interestFormula, setinterestFormula] = useState('70 * borrow / supply');
+  const [interestFormula, setInterestFormula] = useState('70 * borrow / supply');
   const [initialSupply, setInitialSupply] = useState(1);
   const [borrowFormula, setBorrowFormula] = useState('100 - 5 * interestRate');
   const [supplyFormula, setSupplyFormula] = useState('6 * interestRate');
@@ -31,48 +21,11 @@ export default function Home() {
   const [onePlot, setOnePlot] = useState<StepsResults[] | null>(null);
 
   //control variables
-  const [initialSupplyCheck, setInitialSupplyCheck] = useState(true);
-  const [borrowCheck, setBorrowCheck] = useState(true);
-  const [supplyCheck, setSupplyCheck] = useState(true);
-  const [interestCheck, setInterestCheck] = useState(true);
   const [terminal, setTerminal] = useState(false);
 
   //logs variable
 
   /// INTERFACE JS
-
-  // IMPLEMENT INPUT VALIDATION HERE
-  function inputValidation(field: string, input: string) {
-    if (field === 'initialSupply') {
-      let inputValue: number = Number(input);
-      if (inputValue > 0) {
-        setInitialSupplyCheck(true);
-        setInitialSupply(inputValue);
-      } else {
-        setInitialSupplyCheck(false);
-        setInitialSupply(inputValue);
-      }
-    } else if (field === 'borrowFormula') {
-      if (input.includes('interestRate')) {
-        setBorrowCheck(true);
-        setBorrowFormula(input);
-      } else {
-        setBorrowCheck(false);
-        setBorrowFormula(input);
-      }
-    } else if (field === 'supplyFormula') {
-      if (input.includes('interestRate')) {
-        setSupplyCheck(true);
-        setSupplyFormula(input);
-      } else {
-        setSupplyCheck(false);
-        setSupplyFormula(input);
-      }
-    } else if (field === 'interestFormula') {
-      setInterestCheck(true);
-      setinterestFormula(input);
-    }
-  }
   function runSimulation() {
     const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
     setPlotData(results);
@@ -134,11 +87,11 @@ export default function Home() {
   const customTooltip = (props: any) => {
     const { active, payload } = props;
     if (active && payload && payload.length) {
-      console.log(payload);
       return (
         <div className={styles.customTooltip}>
           <p className="label">{`Step : ${payload[0].payload.round}`}</p>
           <p className="desc">{`${payload[0].payload.type} : ${payload[0].payload.value}`}</p>
+          <p className="desc">{`APY : ${payload[0].payload.apy}`}</p>
         </div>
       );
     }
@@ -168,7 +121,7 @@ export default function Home() {
               type="number"
               value={initialSupply}
               placeholder="0"
-              onChange={(e) => inputValidation('initialSupply', e.target.value)}
+              onChange={(e) => setInitialSupply(Number(e.target.value))}
             />
             <br />
             <br />
@@ -178,7 +131,7 @@ export default function Home() {
               type="text"
               placeholder="0"
               value={borrowFormula}
-              onChange={(e) => inputValidation('borrowFormula', e.target.value)}
+              onChange={(e) => setBorrowFormula(e.target.value)}
               title="Must be a function of interestRate"
             />
             <br />
@@ -189,7 +142,7 @@ export default function Home() {
               type="text"
               placeholder="0"
               value={supplyFormula}
-              onChange={(e) => inputValidation('supplyFormula', e.target.value)}
+              onChange={(e) => setSupplyFormula(e.target.value)}
               title="Must be a function of interestRate"
             />
             <br />
@@ -200,69 +153,14 @@ export default function Home() {
               type="text"
               placeholder="0"
               value={interestFormula}
-              onChange={(e) => inputValidation('interestFormula', e.target.value)}
+              onChange={(e) => setInterestFormula(e.target.value)}
             />
             <br />
             <br />
-            Step Size:
-            <br />
-            <input
-              type="text"
-              placeholder="0"
-              value={stepSize}
-              onChange={(e) => inputValidation('supplyFormula', e.target.value)}
-              disabled={true}
-              title="step size is fixed at the moment"
-            />
-            <br />
-            <br />
-            Minimum change:
-            <br />
-            <input
-              type="text"
-              placeholder="0"
-              value={minChange}
-              onChange={(e) => inputValidation('supplyFormula', e.target.value)}
-              disabled={true}
-              title="minimum change is fixed at the moment"
-            />
-            <br />
-            <br />
-          </div>
-          <div className={styles.control}>
-            Inputs Checks:
-            <br />
-            <br />
-            <div className={styles.controlChecks}>
-              Initial supply: {initialSupplyCheck ? '✅' : '❌'}
-              <br />
-              Borrow function: {borrowCheck ? '✅' : '❌'}
-              <br />
-              Supply function: {supplyCheck ? '✅' : '❌'}
-              <br />
-              Interest function: {interestCheck ? '✅' : '❌'}
-            </div>
-            <br />
-            <br />
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              {/* <button
-                onClick={(e) => setTerminal(!terminal)}
-              >
-                toggle terminal
-              </button>
-              <button
-                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck && interestCheck)}
-                onClick={(e) => runSimulation()}
-              >
-                run simulation
-              </button> */}
-              <button
-                disabled={!(initialSupplyCheck && borrowCheck && supplyCheck && interestCheck)}
-                onClick={(e) => runStepSimulation()}
-              >
-                run step simulation
-              </button>
-            </div>
+            <button onClick={(e) => runStepSimulation()}>run step simulation</button>
+            {/* <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
+            <button onClick={(e) => runSimulation()}>run simulation</button>
+           */}
           </div>
         </div>
         {terminal ? (

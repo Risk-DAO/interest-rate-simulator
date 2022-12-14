@@ -76,7 +76,8 @@ export type StepsResults = {
     round: number,
     axis: number,
     type: string,
-    value: number
+    value: number,
+    apy: number
 }
 
 export function simulateSteps(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : StepsResults[] {
@@ -90,7 +91,8 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
         round: round,
         axis: 0,
         type: "supply",
-        value: initialSupply
+        value: initialSupply,
+        apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * (currentBorrow / currentSupply)).toFixed(3))
     }];
 
 
@@ -103,7 +105,8 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
                 round: round,
                 axis: 0,
                 type: "supply",
-                value: Number(newSupply.toFixed(3))
+                value: Number(newSupply.toFixed(3)),
+                apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * (currentBorrow / newSupply)).toFixed(3))
             })
             supply = !supply
             if(newSupply / currentSupply < (1 + minChange)){
@@ -116,7 +119,8 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
                 round: round,
                 axis: 1,
                 type: "borrow",
-                value: Number(currentBorrow.toFixed(3)) 
+                value: Number(currentBorrow.toFixed(3)),
+                apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow)).toFixed(3))
             })
             supply = !supply
         }
