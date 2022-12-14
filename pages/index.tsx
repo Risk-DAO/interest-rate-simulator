@@ -19,7 +19,7 @@ export default function Home() {
   const [plotData, setPlotData] = useState<SimulatedResults[] | null>(null);
   const [stepData, setStepData] = useState<lineArray | null>(null);
   const [onePlot, setOnePlot] = useState<StepsResults[] | null>(null);
-  const [simulationLogs, setSimulationLogs] = useState<logs[]>([]);
+  const [simulationLogs, setSimulationLogs] = useState<logs[] | null>(null);
 
   //control variables
   const [terminal, setTerminal] = useState(false);
@@ -193,9 +193,10 @@ export default function Home() {
           </div>
           {terminal ? (
             <div className={styles.terminal}>
+              {simulationLogs ? <p>final values:</p> : ''}
               {simulationLogs?.map((point, i) => (
                 <p className="code" key={i}>
-                  Step: {point.step} --- Type: {point.type} --- Value: {point.value} --- APY: {point.apy}
+                  --- Type: {point.type} --- Value: {point.value} --- APY: {point.apy} ---
                 </p>
               ))}
             </div>
