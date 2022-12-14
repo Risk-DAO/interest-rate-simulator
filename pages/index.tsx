@@ -72,13 +72,8 @@ export default function Home() {
         setSupplyFormula(input);
       }
     } else if (field === 'interestFormula') {
-      if (input.includes('supply') && input.includes('borrow')) {
-        setInterestCheck(true);
-        setinterestFormula(input);
-      } else {
-        setInterestCheck(false);
-        setinterestFormula(input);
-      }
+      setInterestCheck(true);
+      setinterestFormula(input);
     }
   }
   function runSimulation() {
@@ -209,7 +204,6 @@ export default function Home() {
               placeholder="0"
               value={interestFormula}
               onChange={(e) => inputValidation('interestFormula', e.target.value)}
-              title="Must be a function of borrow and supply"
             />
             <br />
             <br />
@@ -387,8 +381,8 @@ export default function Home() {
                   <Tooltip content={customTooltip} />
                   <ZAxis type="number" range={[100]} />
                   <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                  <Scatter yAxisId="left" name="" data={onePlot} fill="#8884d8" line shape="dot" />
-                  <Scatter yAxisId="right" name="" data={onePlot} fill="#8884d8" line shape="dot" />
+                  <Scatter yAxisId="left" name="" data={onePlot} fill="#8884d8" line />
+                  <Scatter yAxisId="right" name="" data={onePlot} fill="#8884d8" line />
                 </ScatterChart>
               </ResponsiveContainer>
             </div>
