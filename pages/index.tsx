@@ -186,8 +186,10 @@ export default function Home() {
               </div>
 
             </div>
+            <div className={styles.functionButtons}>
             <button onClick={(e) => runStepSimulation()}>run step simulation</button>
             <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
+            </div>
           </div>
           {terminal ? (
             <div className={styles.terminal}>
