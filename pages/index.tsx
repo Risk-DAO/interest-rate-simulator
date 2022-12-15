@@ -1,8 +1,9 @@
 import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { SimulatedResults, findOptimalInterestRate } from '../components/simulation';
-import { StepsResults, simulate } from '../components/simulation';
+import { StepsResults, findOptimalInterestRate, simulate } from '../components/simulation';
 
 import Head from 'next/head';
+import { PacmanLoader } from 'react-spinners';
+import { SimulatedResults } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
@@ -20,8 +21,14 @@ export default function Home() {
   const [stepData, setStepData] = useState<lineArray | null>(null);
   const [onePlot, setOnePlot] = useState<StepsResults[] | null>(null);
   const [simulationLogs, setSimulationLogs] = useState<logs[] | null>(null);
+  const [optimalInterest, setOptimalInterest] = useState<optimalResults | null>();
+  const [finalSupply, setFinalSupply] = useState(0);
+  const [finalSupplyRate, setFinalSupplyRate] = useState(0);
+  const [finalBorrow, setFinalBorrow] = useState(0);
+  const [finalBorrowRate, setFinalBorrowRate] = useState(0);
 
   //control variables
+  const [loading, setLoading] = useState(false);
 
   //interest function defaults
   const withoutKink = '70 * borrow / supply';
@@ -40,12 +47,21 @@ export default function Home() {
     apy: number;
     util: number;
   };
+  type optimalResults = {
+    optimalBorrow: number;
+    optimalRate: number;
+    optimalSupply: number;
+    utilization: number;
+  };
+
   function runStepSimulation() {
-    let supply = [];
-    let borrow = [];
+    setLoading(true);
+    let finalSupply = 0;
+    let finalSupplyRate = 0;
+    let finalBorrow = 0;
+    let finalBorrowRate = 0;
     let logArray = [];
     const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
-    console.log({ results });
     setOnePlot(results);
     for (let i = 0; i < results.length; i++) {
       logArray.push({
@@ -55,14 +71,22 @@ export default function Home() {
         apy: results[i].apy,
         util: results[i].util,
       });
-      if (results[i].type === 'supply') {
-        supply.push(results[i]);
-      } else {
-        borrow.push(results[i]);
+      if (results[i].type === 'Supply') {
+        finalSupply = results[i].value;
+        finalSupplyRate = results[i].apy;
+      } else if (results[i].type === 'Borrow') {
+        finalBorrow = results[i].value;
+        finalBorrowRate = results[i].apy;
       }
     }
     logArray = logArray.slice(-2);
+    setFinalSupply(finalSupply);
+    setFinalSupplyRate(finalSupplyRate);
+    setFinalBorrow(finalBorrow);
+    setFinalBorrowRate(finalBorrowRate);
     setSimulationLogs(logArray);
+    setOptimalInterest(findOptimalInterestRate(100, 0.01, supplyFormula, borrowFormula));
+    setLoading(false);
   }
 
   const customDot: object = (props: any) => {
@@ -170,8 +194,8 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.functionButtons}>
-              <button onClick={(e) => runStepSimulation()}>run step simulation</button>
-              <button onClick={(e) => console.log(findOptimalInterestRate(100, 0.1, supplyFormula, borrowFormula))}>run optimal simulation</button>
+              {loading ? '' : <button onClick={(e) => runStepSimulation()}>run step simulation</button>}
+              <PacmanLoader loading={loading} size={15} />
             </div>
           </div>
         </div>
@@ -211,11 +235,23 @@ export default function Home() {
             {simulationLogs ? <p>final values:</p> : ''}
             {simulationLogs?.map((point, i) => (
               <p className="code" key={i}>
-                Type: {point.type} --- Value: {point.value} --- APY: {point.apy} --- utilization: {point.util}
+                {point.type} {point.value}M --- APY: {point.apy}% --- utilization: {point.util * 100}%
               </p>
             ))}
+            {optimalInterest ? <p>Optimal Interest Rate: {Number(optimalInterest.optimalRate.toFixed(4))}%</p> : ''}
+            {optimalInterest ? (
+              <p>% of maximal TVL achieved: {Number((finalSupply / optimalInterest.optimalRate).toFixed(4))}%</p>
+            ) : (
+              ''
+            )}
+            {optimalInterest ? (
+              <p>% of maximal revenues achieved: {Number(((finalBorrow * finalBorrowRate) / (optimalInterest.optimalBorrow * optimalInterest.optimalRate)).toFixed(4))}%</p>
+            ) : (
+              ''
+            )}
           </div>
         </div>
+        {/* <button onClick={(e) => setLoading(!loading)}>run optimal simulation</button> */}
       </main>
       <footer className={styles.footer}>
         <h2>Join the DAO</h2>
