@@ -176,6 +176,7 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.graphsContainer}>
+          <div className={styles.centering}></div>
           {true ? (
             <div className={styles.supplyGraph}>
               <ResponsiveContainer width="100%" height="100%">
@@ -206,7 +207,6 @@ export default function Home() {
           ) : (
             ''
           )}
-          {terminal ? (
             <div className={styles.terminal}>
               {simulationLogs ? <p>final values:</p> : ''}
               {simulationLogs?.map((point, i) => (
@@ -215,9 +215,6 @@ export default function Home() {
                 </p>
               ))}
             </div>
-          ) : (
-            ''
-          )}
         </div>
         
       </main>

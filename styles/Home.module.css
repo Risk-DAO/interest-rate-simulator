@@ -18,9 +18,11 @@
 }
 .terminal{
     font-family: monospace;
+    width: 20%;
     padding: 10px;
     font-size: 11px;
     height: 350px;
+    margin: 10px;
     min-height: 0;
     white-space: pre;
     overflow: auto;
@@ -342,10 +344,11 @@
   display: flex;
   flex: 1;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
 }
 .supplyGraph{
   min-width:800px;
+  max-width: 800px;
   min-height: 550px;
   padding: 10px;
   margin: 10px;
