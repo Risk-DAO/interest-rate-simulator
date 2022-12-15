@@ -3,11 +3,11 @@ const stepSize = 0.0001
 const minChange = 0.001
 
 const borrowDemand = function(interestRate) {
-    return 100 - 5 * interestRate
+    return eval(borrowFormula)
 }
 
 const supplyDemand = function(interestRate) {
-    return 6 * interestRate
+    return eval(supplyFormula)
 }
 
 const protocolInterestRate = function(supply, borrow) { 
