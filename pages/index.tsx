@@ -1,5 +1,5 @@
 import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { StepsResults, simulateSteps } from '../components/simulation';
+import { StepsResults, simulate } from '../components/simulation';
 
 import Head from 'next/head';
 import { SimulatedResults } from '../components/simulation';
@@ -44,7 +44,7 @@ export default function Home() {
     let supply = [];
     let borrow = [];
     let logArray = []
-    const results = simulateSteps(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
+    const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
     console.log({ results });
     setOnePlot(results);
     for (let i = 0; i < results.length; i++) {

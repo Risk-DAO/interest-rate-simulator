@@ -47,7 +47,7 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
         supplyInterestRate += stepSize
     }
 
-    // console.log({supplyInterestRate})
+    console.log({supplyInterestRate})
     let borrow = 0
     while(true) {
         const borrowRate = borrow * supplyInterestRate / initialSupply
@@ -56,7 +56,7 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
         if(borrowDemandResult < borrow) break
         if(borrowDemandResult >= initialSupply) return initialSupply
 
-        // console.log({borrowRate}, {borrow})
+        console.log({borrowRate}, {borrow})
 
         borrow += stepSize
     }
@@ -133,11 +133,26 @@ export function simulateSteps(initialSupply:number, stepSize:number, minChange:n
     return results
 }
 
-export function simulate(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : SimulatedResults[] {
+export function simulate(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : StepsResults[] {
     let currentSupply = initialSupply
     let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyFormula, borrowFormula)
     let firstIteration = true;
-    const results: SimulatedResults[] = [];
+    let round = 0;
+    const results: StepsResults[] = [{
+        round: round,
+        axis: 0,
+        type: "Supply",
+        value: initialSupply,
+        apy: 0,
+    }];
+    round += 1
+    results.push({
+        round: round,
+        axis: 1,
+        type: "Borrow",
+        value: Number(currentBorrow.toFixed(2)),
+        apy: 0,
+    })
 
     console.log("initial borrow", currentBorrow)
 
@@ -150,16 +165,21 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
             const util = currentBorrow / currentSupply
             const supplyApy = protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * util
             const borrowApy = protocolInterestRate(interestRateFormula, currentSupply, currentBorrow)
-            results.push(
-                {
-                util: Number(util.toFixed(2)),
-                supply: Number(currentSupply.toFixed(2)),
-                supplyApy: Number(supplyApy.toFixed(2)),
-                borrow: Number(currentBorrow.toFixed(2)),
-                borrowApy: Number(borrowApy.toFixed(2)),
-            }
-            )
-            console.log(results)
+            results.push({
+                round: round,
+                axis: 0,
+                type: "Supply",
+                value: Number(currentSupply.toFixed(2)),
+                apy: Number(supplyApy.toFixed(2))
+            })
+            round += 1
+            results.push({
+                round: round,
+                axis: 1,
+                type: "Borrow",
+                value: Number(currentBorrow.toFixed(2)),
+                apy: Number(borrowApy.toFixed(2)),
+            })
         }
             break
         }
@@ -170,15 +190,23 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         const util = currentBorrow / currentSupply
         const supplyApy = protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * util
         const borrowApy = protocolInterestRate(interestRateFormula,currentSupply, currentBorrow)
-        results.push(
-            {
-            util: Number(util.toFixed(2)),
-            supply: Number(currentSupply.toFixed(2)),
-            supplyApy: Number(supplyApy.toFixed(2)),
-            borrow: Number(currentBorrow.toFixed(2)),
-            borrowApy: Number(borrowApy.toFixed(2)),
-        }
-        )
+        round += 1
+        results.push({
+            round: round,
+            axis: 0,
+            type: "Supply",
+            value: Number(currentSupply.toFixed(2)),
+            apy: Number(supplyApy.toFixed(2))
+        })
+        round += 1
+        results.push({
+            round: round,
+            axis: 1,
+            type: "Borrow",
+            value: Number(currentBorrow.toFixed(2)),
+            apy: Number(borrowApy.toFixed(2)),
+        })
+        
 
         // console.log({currentSupply}, {supplyApy}, {currentBorrow}, {borrowApy})
         firstIteration = false;
