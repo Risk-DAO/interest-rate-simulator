@@ -188,7 +188,7 @@ function findSupplyAccordingToInterestRate(initialSupply:number, stepSize:number
 }
 
 
-function findOptimalInterestRate(maxInterestRate:number, stepSize:number, supplyFormula: string, borrowFormula: string) {
+export function findOptimalInterestRate(maxInterestRate:number, stepSize:number, supplyFormula: string, borrowFormula: string) {
     let optimalRate = stepSize
     let optimalBorrow = 0
     let optimalSupply = 0

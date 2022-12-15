@@ -1,8 +1,8 @@
 import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { SimulatedResults, findOptimalInterestRate } from '../components/simulation';
 import { StepsResults, simulate } from '../components/simulation';
 
 import Head from 'next/head';
-import { SimulatedResults } from '../components/simulation';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
@@ -171,6 +171,7 @@ export default function Home() {
             </div>
             <div className={styles.functionButtons}>
               <button onClick={(e) => runStepSimulation()}>run step simulation</button>
+              <button onClick={(e) => console.log(findOptimalInterestRate(100, stepSize * 100, supplyFormula, borrowFormula))}>run optimal simulation</button>
             </div>
           </div>
         </div>
