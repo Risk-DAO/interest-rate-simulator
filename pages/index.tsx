@@ -22,7 +22,7 @@ export default function Home() {
   const [simulationLogs, setSimulationLogs] = useState<logs[] | null>(null);
 
   //control variables
-  const [terminal, setTerminal] = useState(true);
+
 
   //interest function defaults
   const withoutKink = '70 * borrow / supply';
@@ -172,7 +172,6 @@ export default function Home() {
             </div>
             <div className={styles.functionButtons}>
               <button onClick={(e) => runStepSimulation()}>run step simulation</button>
-              <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
             </div>
           </div>
         </div>
