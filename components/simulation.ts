@@ -81,60 +81,8 @@ export type StepsResults = {
     axis: number,
     type: string,
     value: number,
-    apy: number
-}
-
-export function simulateSteps(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : StepsResults[] {
-    let currentSupply = initialSupply
-    let newSupply = initialSupply;
-    let currentBorrow = findInitialBorrow(initialSupply, stepSize, supplyFormula, borrowFormula)
-    let computing = true;
-    let supply = false;
-    let round = 0;
-    let failsafe = 0
-    const results: StepsResults[] = [{
-        round: round,
-        axis: 0,
-        type: "Supply",
-        value: initialSupply,
-        apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * (currentBorrow / currentSupply)).toFixed(3))
-    }];
-
-
-    while(computing){
-        failsafe += 1
-        round += 1
-        if(supply){
-            currentSupply = newSupply
-            newSupply = findNewSupply(currentSupply, currentBorrow, stepSize, interestRateFormula, supplyFormula);
-            results.push({
-                round: round,
-                axis: 0,
-                type: "Supply",
-                value: Number(newSupply.toFixed(3)),
-                apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow) * (currentBorrow / newSupply)).toFixed(3))
-            })
-            supply = !supply
-            if(newSupply / currentSupply < (1 + minChange)){
-                computing = false
-            }
-        }
-        else if(!supply){
-            currentBorrow = findNewBorrow(newSupply, currentBorrow, stepSize, interestRateFormula, borrowFormula);
-            results.push({
-                round: round,
-                axis: 1,
-                type: "Borrow",
-                value: Number(currentBorrow.toFixed(3)),
-                apy: Number((protocolInterestRate(interestRateFormula, currentSupply, currentBorrow)).toFixed(3))
-            })
-            supply = !supply
-        }
-        if(failsafe > 300){
-            break
-        }
-    }
-    return results
+    apy: number,
+    util: number
 }
 
 export function simulate(initialSupply:number, stepSize:number, minChange:number, interestRateFormula:string, supplyFormula:string, borrowFormula:string) : StepsResults[] {
@@ -148,6 +96,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         type: "Supply",
         value: initialSupply,
         apy: initialSupplyRate,
+        util: 0
     }];
     round += 1
     results.push({
@@ -156,6 +105,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         type: "Borrow",
         value: Number(currentBorrow.toFixed(2)),
         apy: initialBorrowRate,
+        util: 0
     })
 
     // console.log("initial borrow", currentBorrow)
@@ -174,7 +124,8 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
                 axis: 0,
                 type: "Supply",
                 value: Number(currentSupply.toFixed(2)),
-                apy: Number(supplyApy.toFixed(2))
+                apy: Number(supplyApy.toFixed(2)),
+                util: Number(util.toFixed(2))
             })
             round += 1
             results.push({
@@ -183,6 +134,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
                 type: "Borrow",
                 value: Number(currentBorrow.toFixed(2)),
                 apy: Number(borrowApy.toFixed(2)),
+                util: Number(util.toFixed(2))
             })
         }
             break
@@ -200,7 +152,8 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
             axis: 0,
             type: "Supply",
             value: Number(currentSupply.toFixed(2)),
-            apy: Number(supplyApy.toFixed(2))
+            apy: Number(supplyApy.toFixed(2)),
+            util: Number(util.toFixed(2))
         })
         round += 1
         results.push({
@@ -209,6 +162,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
             type: "Borrow",
             value: Number(currentBorrow.toFixed(2)),
             apy: Number(borrowApy.toFixed(2)),
+            util: Number(util.toFixed(2))
         })
         
 

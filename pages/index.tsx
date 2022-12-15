@@ -38,7 +38,8 @@ export default function Home() {
     step: number,
     type: string,
     value: number,
-    apy: number
+    apy: number,
+    util:number
   }
   function runStepSimulation() {
     let supply = [];
@@ -52,7 +53,8 @@ export default function Home() {
         step: results[i].round,
         type: results[i].type,
         value: results[i].value,
-        apy: results[i].apy
+        apy: results[i].apy,
+        util: results[i].util
       })
       if (results[i].type === 'supply') {
         supply.push(results[i]);
@@ -60,7 +62,7 @@ export default function Home() {
         borrow.push(results[i]);
       }
     }
-    logArray= logArray.slice(-2)
+    logArray = logArray.slice(-2)
     setSimulationLogs(logArray)
   }
 
@@ -153,7 +155,7 @@ export default function Home() {
                 />
               </div>
               <div className={styles.inputs}>
-              <label>Interest Rate Function:</label>
+                <label>Interest Rate Function:</label>
                 <textarea
                   rows={5}
                   cols={30}
@@ -167,11 +169,10 @@ export default function Home() {
                   <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
                 </div>
               </div>
-
             </div>
             <div className={styles.functionButtons}>
-            <button onClick={(e) => runStepSimulation()}>run step simulation</button>
-            <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
+              <button onClick={(e) => runStepSimulation()}>run step simulation</button>
+              <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
             </div>
           </div>
         </div>
@@ -207,16 +208,15 @@ export default function Home() {
           ) : (
             ''
           )}
-            <div className={styles.terminal}>
-              {simulationLogs ? <p>final values:</p> : ''}
-              {simulationLogs?.map((point, i) => (
-                <p className="code" key={i}>
-                  --- Type: {point.type} --- Value: {point.value} --- APY: {point.apy} ---
-                </p>
-              ))}
-            </div>
+          <div className={styles.terminal}>
+            {simulationLogs ? <p>final values:</p> : ''}
+            {simulationLogs?.map((point, i) => (
+              <p className="code" key={i}>
+                Type: {point.type} --- Value: {point.value} --- APY: {point.apy} --- utilization: {point.util}
+              </p>
+            ))}
+          </div>
         </div>
-        
       </main>
       <footer className={styles.footer}>
         <h2>Join the DAO</h2>
