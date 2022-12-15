@@ -23,7 +23,6 @@ export default function Home() {
 
   //control variables
 
-
   //interest function defaults
   const withoutKink = '70 * borrow / supply';
   const withKink = 'borrow/supply > 0.7 ? (borrow/supply) * 0.9 : (borrow/supply) * 0.7';
@@ -35,16 +34,16 @@ export default function Home() {
     borrowResult: StepsResults[];
   };
   type logs = {
-    step: number,
-    type: string,
-    value: number,
-    apy: number,
-    util:number
-  }
+    step: number;
+    type: string;
+    value: number;
+    apy: number;
+    util: number;
+  };
   function runStepSimulation() {
     let supply = [];
     let borrow = [];
-    let logArray = []
+    let logArray = [];
     const results = simulate(initialSupply, minChange, stepSize, interestFormula, supplyFormula, borrowFormula);
     console.log({ results });
     setOnePlot(results);
@@ -54,16 +53,16 @@ export default function Home() {
         type: results[i].type,
         value: results[i].value,
         apy: results[i].apy,
-        util: results[i].util
-      })
+        util: results[i].util,
+      });
       if (results[i].type === 'supply') {
         supply.push(results[i]);
       } else {
         borrow.push(results[i]);
       }
     }
-    logArray = logArray.slice(-2)
-    setSimulationLogs(logArray)
+    logArray = logArray.slice(-2);
+    setSimulationLogs(logArray);
   }
 
   const customDot: object = (props: any) => {
