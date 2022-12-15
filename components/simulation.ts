@@ -172,4 +172,42 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
     return results;
 }
 
+function findSupplyAccordingToInterestRate(initialSupply:number, stepSize:number, supplyFormula:string, borrowInterestRate:number, borrowSize:number) {
+    let supply = initialSupply
+    while(true) {
+        console.log({supply})
+        console.log({stepSize})
+        let variable = supplyDemand(supplyFormula, borrowInterestRate * borrowSize / supply)
+        console.log({variable})
+        if(supply > variable) {break}
+        supply += stepSize
+    }
+
+    return supply;
+}
+
+
+function findOptimalInterestRate(maxInterestRate:number, stepSize:number, supplyFormula: string, borrowFormula: string) {
+    let optimalRate = stepSize
+    let optimalBorrow = 0
+    let optimalSupply = 0
+    for(let currentInterestRate = stepSize ; currentInterestRate < maxInterestRate ; currentInterestRate += stepSize) {
+        let borrowAmount = borrowDemand(borrowFormula, currentInterestRate)
+        if(borrowAmount < 0) continue
+        const supply = findSupplyAccordingToInterestRate(0, stepSize, supplyFormula, currentInterestRate, borrowAmount)
+        //console.log({borrowAmount},{supply},{currentInterestRate})
+        if(supply < borrowAmount) borrowAmount = supply
+
+        if(optimalBorrow * optimalRate < borrowAmount * currentInterestRate) {
+            // new optimum
+            optimalRate = currentInterestRate
+            optimalBorrow = borrowAmount
+            optimalSupply = supply
+        }
+    }
+
+    const utilization = optimalBorrow / optimalSupply
+    return {optimalRate, optimalBorrow, optimalSupply, utilization}
+}
 // simulate(1, 0.001, 0.0001, '70 * borrow / supply', '6 * interestRate', '100 - 5 * interestRate')
+console.log(findOptimalInterestRate(100, 0.001,'100 - 5 * interestRate' ,'6 * interestRate' ))
