@@ -17,10 +17,7 @@
   flex:1;
 }
 .terminal{
-    background: black;
-    color: white;
     font-family: monospace;
-    width: 20%;
     padding: 10px;
     font-size: 11px;
     height: 350px;

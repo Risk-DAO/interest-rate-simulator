@@ -22,7 +22,7 @@ export default function Home() {
   const [simulationLogs, setSimulationLogs] = useState<logs[] | null>(null);
 
   //control variables
-  const [terminal, setTerminal] = useState(false);
+  const [terminal, setTerminal] = useState(true);
 
   //interest function defaults
   const withoutKink = '70 * borrow / supply';
@@ -125,12 +125,6 @@ export default function Home() {
           <a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:
         </p>
         <div className={styles.contentTerminal}>
-        {terminal ? (
-            <div className={styles.centering}>
-            </div>
-          ) : (
-            ''
-          )}
           <div className={styles.userContent}>
             <div className={styles.grid}>
               <div className={styles.inputs}>
@@ -180,18 +174,6 @@ export default function Home() {
             <button onClick={(e) => setTerminal(!terminal)}>toggle terminal</button>
             </div>
           </div>
-          {terminal ? (
-            <div className={styles.terminal}>
-              {simulationLogs ? <p>final values:</p> : ''}
-              {simulationLogs?.map((point, i) => (
-                <p className="code" key={i}>
-                  --- Type: {point.type} --- Value: {point.value} --- APY: {point.apy} ---
-                </p>
-              ))}
-            </div>
-          ) : (
-            ''
-          )}
         </div>
         <div className={styles.graphsContainer}>
           {true ? (
@@ -224,7 +206,20 @@ export default function Home() {
           ) : (
             ''
           )}
+          {terminal ? (
+            <div className={styles.terminal}>
+              {simulationLogs ? <p>final values:</p> : ''}
+              {simulationLogs?.map((point, i) => (
+                <p className="code" key={i}>
+                  --- Type: {point.type} --- Value: {point.value} --- APY: {point.apy} ---
+                </p>
+              ))}
+            </div>
+          ) : (
+            ''
+          )}
         </div>
+        
       </main>
       <footer className={styles.footer}>
         <h2>Join the DAO</h2>

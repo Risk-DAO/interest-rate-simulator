@@ -50,7 +50,7 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
         supplyInterestRate += stepSize
     }
     initialSupplyRate = Number(supplyInterestRate.toFixed(2))
-    console.log({supplyInterestRate})
+    // console.log({supplyInterestRate})
     let borrow = 0
     while(true) {
         const borrowRate = borrow * supplyInterestRate / initialSupply
@@ -60,7 +60,7 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
         if(borrowDemandResult < borrow) break
         if(borrowDemandResult >= initialSupply) return initialSupply
 
-        console.log({borrowRate}, {borrow})
+        // console.log({borrowRate}, {borrow})
 
         borrow += stepSize
     }
@@ -158,7 +158,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         apy: initialBorrowRate,
     })
 
-    console.log("initial borrow", currentBorrow)
+    // console.log("initial borrow", currentBorrow)
 
     while(true) {
         const newSupply = findNewSupply(currentSupply, currentBorrow, stepSize, interestRateFormula, supplyFormula)
