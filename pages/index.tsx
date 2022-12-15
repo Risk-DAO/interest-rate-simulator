@@ -171,7 +171,7 @@ export default function Home() {
             </div>
             <div className={styles.functionButtons}>
               <button onClick={(e) => runStepSimulation()}>run step simulation</button>
-              <button onClick={(e) => console.log(findOptimalInterestRate(100, stepSize * 100, supplyFormula, borrowFormula))}>run optimal simulation</button>
+              <button onClick={(e) => console.log(findOptimalInterestRate(100, 0.1, supplyFormula, borrowFormula))}>run optimal simulation</button>
             </div>
           </div>
         </div>
