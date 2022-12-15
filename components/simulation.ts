@@ -58,7 +58,10 @@ function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:
         const borrowDemandResult = borrowDemand(borrowFormula, borrowRate)
         
         if(borrowDemandResult < borrow) break
-        if(borrowDemandResult >= initialSupply) return initialSupply
+        if(borrowDemandResult >= initialSupply){
+            initialBorrowRate = Number((initialSupply * supplyInterestRate / initialSupply).toFixed(2))
+            return initialSupply
+        } 
 
         // console.log({borrowRate}, {borrow})
 
@@ -172,6 +175,25 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
     return results;
 }
 
+function findSupplyAccordingToInterestRateWithEval(initialSupply:number, stepSize:number, supplyFormula:string, borrowInterestRate:number, borrowSize:number) {
+
+    if(!supplyFormula.includes('interestRate')) {
+        throw new Error('Can only work with a supply formula that depends on interest rate')
+    }
+
+    const supplyDemandFctStr = supplyFormula.replace('interestRate', 'borrowInterestRate * borrowSize / supply');
+    const fctString = `let supply = initialSupply; 
+                    while(true) {
+                        if(supply > (${supplyDemandFctStr})) break;
+                        supply += stepSize
+                    }
+                    return supply;`
+
+    const fn = Function('initialSupply', 'stepSize', 'borrowInterestRate', 'borrowSize', fctString);
+
+    return fn(initialSupply, stepSize, borrowInterestRate, borrowSize);
+}
+
 function findSupplyAccordingToInterestRate(initialSupply:number, stepSize:number, supplyFormula:string, borrowInterestRate:number, borrowSize:number) {
     let supply = initialSupply
     while(true) {
@@ -195,7 +217,7 @@ export function findOptimalInterestRate(maxInterestRate:number, stepSize:number,
     for(let currentInterestRate = stepSize ; currentInterestRate < maxInterestRate ; currentInterestRate += stepSize) {
         let borrowAmount = borrowDemand(borrowFormula, currentInterestRate)
         if(borrowAmount < 0) continue
-        const supply = findSupplyAccordingToInterestRate(0, stepSize, supplyFormula, currentInterestRate, borrowAmount)
+        const supply = findSupplyAccordingToInterestRateWithEval(0, stepSize, supplyFormula, currentInterestRate, borrowAmount)
         //console.log({borrowAmount},{supply},{currentInterestRate})
         if(supply < borrowAmount) borrowAmount = supply
 
