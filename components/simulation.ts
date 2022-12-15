@@ -40,19 +40,23 @@ function findNewBorrow(supply:number, borrow:number, step:number, interestRateFo
     }
 }
 
+
+let initialSupplyRate = 0;
+let initialBorrowRate = 0;
 function findInitialBorrow(initialSupply:number, stepSize:number, supplyFormula:string, borrowFormula:string) {
     // find supply interest rate
     let supplyInterestRate = 0
     while(supplyDemand(supplyFormula, supplyInterestRate) < initialSupply) {
         supplyInterestRate += stepSize
     }
-
+    initialSupplyRate = Number(supplyInterestRate.toFixed(2))
     console.log({supplyInterestRate})
     let borrow = 0
     while(true) {
         const borrowRate = borrow * supplyInterestRate / initialSupply
+        initialBorrowRate = Number(borrowRate.toFixed(2))
         const borrowDemandResult = borrowDemand(borrowFormula, borrowRate)
-
+        
         if(borrowDemandResult < borrow) break
         if(borrowDemandResult >= initialSupply) return initialSupply
 
@@ -143,7 +147,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         axis: 0,
         type: "Supply",
         value: initialSupply,
-        apy: 0,
+        apy: initialSupplyRate,
     }];
     round += 1
     results.push({
@@ -151,7 +155,7 @@ export function simulate(initialSupply:number, stepSize:number, minChange:number
         axis: 1,
         type: "Borrow",
         value: Number(currentBorrow.toFixed(2)),
-        apy: 0,
+        apy: initialBorrowRate,
     })
 
     console.log("initial borrow", currentBorrow)

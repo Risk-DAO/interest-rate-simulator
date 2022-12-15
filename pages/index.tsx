@@ -62,8 +62,6 @@ export default function Home() {
     }
     logArray= logArray.slice(-2)
     setSimulationLogs(logArray)
-    setStepData({ globalResult: results, supplyResult: supply, borrowResult: borrow });
-    console.log(stepData);
   }
 
   const customDot: object = (props: any) => {
@@ -143,8 +141,6 @@ export default function Home() {
                   value={initialSupply}
                   onChange={(e) => setInitialSupply(Number(e.target.value))}
                 />
-                <br />
-                <br />
                 <label>Borrow Function:</label>
                 <input
                   type="text"
@@ -153,8 +149,6 @@ export default function Home() {
                   onChange={(e) => setBorrowFormula(e.target.value)}
                   title="Must be a function of interestRate"
                 />
-                <br />
-                <br />
                 <label>Supply Function:</label>
                 <input
                   type="text"
@@ -163,12 +157,9 @@ export default function Home() {
                   onChange={(e) => setSupplyFormula(e.target.value)}
                   title="Must be a function of interestRate"
                 />
-                <br />
-                <br />
               </div>
               <div className={styles.inputs}>
-                Interest Rate Function:
-                <br />
+              <label>Interest Rate Function:</label>
                 <textarea
                   rows={5}
                   cols={30}
@@ -177,8 +168,6 @@ export default function Home() {
                   onChange={(e) => setInterestFormula(e.target.value)}
                   value={interestFormula}
                 ></textarea>
-                <br />
-                <br />
                 <div className={styles.presetButtons}>
                   <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
                   <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
