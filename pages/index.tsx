@@ -55,11 +55,17 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setLoading(false);
-  }, [onePlot]);
+    //setLoading(false);
+  }, [loading]);
 
-  function runStepSimulation() {
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+  async function runStepSimulation() {
     setLoading(true);
+    setOnePlot(null);
+    await sleep(500);
     let finalSupply = 0;
     let finalSupplyRate = 0;
     let finalBorrow = 0;
@@ -90,6 +96,7 @@ export default function Home() {
     setFinalBorrowRate(finalBorrowRate);
     setSimulationLogs(logArray);
     setOptimalInterest(findOptimalInterestRate(100, 0.01, supplyFormula, borrowFormula));
+    setLoading(false);
   }
 
   const customDot: object = (props: any) => {
