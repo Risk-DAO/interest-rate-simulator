@@ -3,20 +3,20 @@ const stepSize = 0.0001
 const minChange = 0.001
 
 const borrowDemand = function(interestRate) {
-    return eval(borrowFormula)
+    return 100 - 5 * interestRate
 }
 
 const supplyDemand = function(interestRate) {
-    return eval(supplyFormula)
+    return 6 * interestRate
 }
 
-const protocolInterestRate = function(supply, borrow) { 
+const protocolInterestRate = function(supply, borrow) {
+    //return 2 * 1.09544512 * borrow / supply    
     return 70 * borrow / supply
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-borrowFormula = '100 - 5 * interestRate'
-supplyFormula = '6 * interestRate'
+
 
 function findNewSupply(supply, borrow, step, interestRateFunction, supplyDemandFunction) {
     for(let newSupply = supply ; ; newSupply += step) {
@@ -40,20 +40,17 @@ function findNewBorrow(supply, borrow, step, interestRateFunction, borrowDemandF
     }
 }
 
-let initialSupplyRate = undefined;
-let initialBorrowRate = undefined;
 function findInitialBorrow(initialSupply, stepSize, supplyDemandFunction, borrowDemandFunction) {
     // find supply interest rate
     let supplyInterestRate = 0
     while(supplyDemandFunction(supplyInterestRate) < initialSupply) {
         supplyInterestRate += stepSize
     }
-    initialSupplyRate = supplyInterestRate
+
     console.log({supplyInterestRate})
-    let borrow = 0
+    let borrow = 1
     while(true) {
         const borrowRate = borrow * supplyInterestRate / initialSupply
-        initialBorrowRate = borrowRate
         const borrowDemand = borrowDemandFunction(borrowRate)
 
         if(borrowDemand < borrow) break
@@ -86,46 +83,8 @@ function simulate(initialSupply, stepSize, minChage, interestRateFunction, suppl
         const supplyApy = interestRateFunction(currentSupply, currentBorrow) * util
         const borrowApy = interestRateFunction(currentSupply, currentBorrow)
 
-        console.log({initialBorrowRate})
         console.log({currentSupply}, {supplyApy}, {currentBorrow}, {borrowApy})
     }
 }
 
-
-function findSupplyAccordingToInterestRate(initialSupply, stepSize, supplyDemandFunction, borrowInterestRate, borrowSize) {
-    let supply = initialSupply
-    while(true) {
-        if(supply > supplyDemandFunction(borrowInterestRate * borrowSize / supply)) break
-        supply += stepSize
-
-    }
-
-    return supply;
-}
-
-
-function findOptimalInterestRate(maxInteresrRate, stepSize, supplyDemandFunction, borrowDemandFunction) {
-    let optimalRate = stepSize
-    let optimalBorrow = 0
-    let optimalSupply = 0
-    for(let currentInterestRate = stepSize ; currentInterestRate < maxInteresrRate ; currentInterestRate += stepSize) {
-        let borrowAmount = borrowDemandFunction(currentInterestRate)
-        if(borrowAmount < 0) continue
-        const supply = findSupplyAccordingToInterestRate(0, stepSize, supplyDemandFunction, currentInterestRate, borrowAmount)
-        //console.log({borrowAmount},{supply},{currentInterestRate})
-        if(supply < borrowAmount) borrowAmount = supply
-
-        if(optimalBorrow * optimalRate < borrowAmount * currentInterestRate) {
-            // new optimum
-            optimalRate = currentInterestRate
-            optimalBorrow = borrowAmount
-            optimalSupply = supply
-        }
-    }
-
-    const utilization = optimalBorrow / optimalSupply
-    return {optimalRate, optimalBorrow, optimalSupply, utilization}
-}
-
-// simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand)
-console.log(findOptimalInterestRate(100, 0.001, supplyDemand, borrowDemand))
+simulate(1, 0.001, 0.0001, protocolInterestRate, supplyDemand, borrowDemand)

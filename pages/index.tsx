@@ -1,11 +1,11 @@
 import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StepsResults, findOptimalInterestRate, simulate } from '../components/simulation';
+import { useEffect, useState } from 'react';
 
 import Head from 'next/head';
 import { PacmanLoader } from 'react-spinners';
 import { SimulatedResults } from '../components/simulation';
 import styles from '../styles/Home.module.css';
-import { useState } from 'react';
 
 export default function Home() {
   // Simulation parameters initialization
@@ -54,6 +54,10 @@ export default function Home() {
     utilization: number;
   };
 
+  useEffect(() => {
+    setLoading(false);
+  }, [onePlot]);
+
   function runStepSimulation() {
     setLoading(true);
     let finalSupply = 0;
@@ -86,7 +90,6 @@ export default function Home() {
     setFinalBorrowRate(finalBorrowRate);
     setSimulationLogs(logArray);
     setOptimalInterest(findOptimalInterestRate(100, 0.01, supplyFormula, borrowFormula));
-    setLoading(false);
   }
 
   const customDot: object = (props: any) => {
@@ -233,19 +236,36 @@ export default function Home() {
           )}
           <div className={styles.terminal}>
             {simulationLogs ? <p>final values:</p> : ''}
-            {simulationLogs?.map((point, i) => (
-              <p className="code" key={i}>
-                {point.type} {point.value}M --- APY: {point.apy}% --- utilization: {point.util * 100}%
+            {simulationLogs?
+            <div className="code">
+            <p  className="code">
+            {simulationLogs[0].type} {simulationLogs[0].value}M --- APY: {simulationLogs[0].apy}% 
+          </p>
+              <p className="code" >
+                {simulationLogs[1].type} {simulationLogs[1].value}M --- APY: {simulationLogs[1].apy}%
               </p>
-            ))}
-            {optimalInterest ? <p>Optimal Interest Rate: {Number(optimalInterest.optimalRate.toFixed(4))}%</p> : ''}
+              <p className="code" >
+              utilization: {simulationLogs[1].util * 100}%
+              </p>
+              </div>
+            : ''}
+            {optimalInterest ? <p>Optimal Interest Rate: {Number(optimalInterest.optimalRate.toFixed(2))}%</p> : ''}
             {optimalInterest ? (
-              <p>% of maximal TVL achieved: {Number((finalSupply / optimalInterest.optimalRate).toFixed(4))}%</p>
+              <p>% of maximal TVL achieved: {Number((finalSupply / optimalInterest.optimalRate).toFixed(2))}%</p>
             ) : (
               ''
             )}
             {optimalInterest ? (
-              <p>% of maximal revenues achieved: {Number(((finalBorrow * finalBorrowRate) / (optimalInterest.optimalBorrow * optimalInterest.optimalRate)).toFixed(4))}%</p>
+              <p>
+                % of maximal revenues achieved:{' '}
+                {Number(
+                  (
+                    (finalBorrow * finalBorrowRate) /
+                    (optimalInterest.optimalBorrow * optimalInterest.optimalRate) * 100
+                  ).toFixed(2),
+                )}
+                %
+              </p>
             ) : (
               ''
             )}
