@@ -17,8 +17,9 @@ a {
 
 table {
   width: 100%;
-  max-width: 600px;
+  max-width: 100%;
   min-width: 300px;
+  padding: 10px;
 }
 table th {
   padding: 3px 10px;
@@ -26,7 +27,6 @@ table th {
   background: #333;
 }
 table td {
-  min-width: 120px;
   padding: 3px 10px;
 }
 
