@@ -65,6 +65,8 @@ export default function Home() {
   async function runStepSimulation() {
     setLoading(true);
     setOnePlot(null);
+    setOptimalInterest(null);
+    setSimulationLogs(null);
     await sleep(500);
     let finalSupply = 0;
     let finalSupplyRate = 0;
@@ -211,8 +213,9 @@ export default function Home() {
         </div>
         <div className={styles.graphsContainer}>
           <div className={styles.centering}></div>
-          {true ? (
             <div className={styles.supplyGraph}>
+              
+          {!loading ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   width={500}
@@ -236,46 +239,37 @@ export default function Home() {
                   <Tooltip content={customTooltip} />
                   <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} dot={customDot} />
                 </LineChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
+              </ResponsiveContainer>) : (
             ''
           )}
+            </div>
+          
           <div className={styles.terminal}>
-            {simulationLogs ? <p>final values:</p> : ''}
-            {simulationLogs?
-            <div className="code">
-            <p  className="code">
-            {simulationLogs[0].type} {simulationLogs[0].value}M --- APY: {simulationLogs[0].apy}% 
-          </p>
-              <p className="code" >
-                {simulationLogs[1].type} {simulationLogs[1].value}M --- APY: {simulationLogs[1].apy}%
-              </p>
-              <p className="code" >
-              utilization: {simulationLogs[1].util * 100}%
-              </p>
-              </div>
-            : ''}
-            {optimalInterest ? <p>Optimal Interest Rate: {Number(optimalInterest.optimalRate.toFixed(2))}%</p> : ''}
-            {optimalInterest ? (
-              <p>% of maximal TVL achieved: {Number((finalSupply / optimalInterest.optimalRate).toFixed(2))}%</p>
-            ) : (
-              ''
-            )}
-            {optimalInterest ? (
-              <p>
-                % of maximal revenues achieved:{' '}
-                {Number(
+            {simulationLogs && optimalInterest ?  
+            <table>
+              <thead><tr>Simulation Results:</tr></thead>
+              <br/>
+              <tbody>
+                <tr><td>Final Supply:</td><td>{simulationLogs[0].value}M</td></tr>
+                <tr><td>Final Supply APY:</td><td>{simulationLogs[0].apy}%</td></tr>
+                <br/>
+                <tr><td>Final Borrow:</td><td>{simulationLogs[1].value}M</td></tr>
+                <tr><td>Final Borrow APY:</td><td>{simulationLogs[1].apy}%</td></tr>
+                <br/>
+                <tr><td>Utilization:</td><td>{simulationLogs[1].util * 100}%</td></tr>
+                <br/>
+                <tr><td>Optimal Interest Rate:</td><td>{Number(optimalInterest.optimalRate.toFixed(2))}%</td></tr>
+                <tr><td>% of maximal TVL achieved:</td><td>{Number((finalSupply / optimalInterest.optimalRate).toFixed(2))}%</td></tr>
+                <tr><td>% of maximal revenues achieved:</td><td>{Number(
                   (
                     (finalBorrow * finalBorrowRate) /
                     (optimalInterest.optimalBorrow * optimalInterest.optimalRate) * 100
                   ).toFixed(2),
                 )}
-                %
-              </p>
-            ) : (
-              ''
-            )}
+                %</td></tr>
+            </tbody>
+            </table>
+           : ''}
           </div>
         </div>
         {/* <button onClick={(e) => setLoading(!loading)}>run optimal simulation</button> */}
