@@ -169,6 +169,7 @@ export default function Home() {
                 <input
                   type="number"
                   minLength={1}
+                  disabled={loading}
                   value={initialSupply}
                   onChange={(e) => setInitialSupply(Number(e.target.value))}
                 />
@@ -176,6 +177,7 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="0"
+                  disabled={loading}
                   value={borrowFormula}
                   onChange={(e) => setBorrowFormula(e.target.value)}
                   title="Must be a function of interestRate"
@@ -184,6 +186,7 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="0"
+                  disabled={loading}
                   value={supplyFormula}
                   onChange={(e) => setSupplyFormula(e.target.value)}
                   title="Must be a function of interestRate"
@@ -195,13 +198,14 @@ export default function Home() {
                   rows={5}
                   cols={30}
                   name="text"
+                  disabled={loading}
                   placeholder="Enter text"
                   onChange={(e) => setInterestFormula(e.target.value)}
                   value={interestFormula}
                 ></textarea>
                 <div className={styles.presetButtons}>
-                  <button onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
-                  <button onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
+                  <button disabled={loading} onClick={(e) => setInterestFormula(withoutKink)}>without kink preset</button>
+                  <button disabled={loading} onClick={(e) => setInterestFormula(withKink)}>with kink preset</button>
                 </div>
               </div>
             </div>
