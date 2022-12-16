@@ -21,11 +21,9 @@
     width: 15%;
     padding: 10px;
     font-size: 11px;
-    height: 350px;
     margin: 10px;
-    min-height: 0;
-    white-space: pre;
-    overflow: auto;
+    height: 280px;
+    max-height: 100%;
     box-shadow: 0rem 0.25rem 1rem rgba(128, 128, 128, 0.25), 0rem -0.25rem 1rem rgba(128, 128, 128, 0.25) !important;
 }
 .centering{

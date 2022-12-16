@@ -256,7 +256,7 @@ export default function Home() {
                 <tr><td>Final Borrow:</td><td>{simulationLogs[1].value}M</td></tr>
                 <tr><td>Final Borrow APY:</td><td>{simulationLogs[1].apy}%</td></tr>
                 <br/>
-                <tr><td>Utilization:</td><td>{simulationLogs[1].util * 100}%</td></tr>
+                <tr><td>Utilization:</td><td>{Number((simulationLogs[1].util * 100).toFixed(2))}%</td></tr>
                 <br/>
                 <tr><td>Optimal Interest Rate:</td><td>{Number(optimalInterest.optimalRate.toFixed(2))}%</td></tr>
                 <tr><td>% of maximal TVL achieved:</td><td>{Number((finalSupply / optimalInterest.optimalSupply * 100).toFixed(2))}%</td></tr>
