@@ -173,7 +173,7 @@ export default function Home() {
                   value={initialSupply}
                   onChange={(e) => setInitialSupply(Number(e.target.value))}
                 />
-                <label>Borrow Function:</label>
+                <label>Borrow Demand Function (M):</label>
                 <input
                   type="text"
                   placeholder="0"
@@ -182,7 +182,7 @@ export default function Home() {
                   onChange={(e) => setBorrowFormula(e.target.value)}
                   title="Must be a function of interestRate"
                 />
-                <label>Supply Function:</label>
+                <label>Supply Demand Function (M):</label>
                 <input
                   type="text"
                   placeholder="0"
