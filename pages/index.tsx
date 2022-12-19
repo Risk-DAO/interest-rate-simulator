@@ -159,7 +159,7 @@ export default function Home() {
         </div>
         <h1 className={styles.title}>Welcome to Risk DAO&apos;s interest rate simulator.</h1>
         <p className={styles.description}>
-          <a href="https://medium.com/risk-dao">Read the paper</a> or get started by inputing your variables:
+          <a href="https://medium.com/risk-dao/irs-the-interest-rate-simulator-746e50a64484">Read the manual</a> or get started by inputing your variables:
         </p>
         <div className={styles.contentTerminal}>
           <div className={styles.userContent}>
